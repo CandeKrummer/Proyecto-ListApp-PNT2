@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 
 export const useStore = defineStore('pruebaContador', {
     state: () => ({
-        _listaDeCompras: [],
+        _listaDeCompras: {},
         _idLista: 4,
         _url: "http://localhost:3000/shopping-lists/",
         _user: {
@@ -15,15 +15,64 @@ export const useStore = defineStore('pruebaContador', {
         validarUsuario(mail, password) {
             if (mail == this._user.mail && password == this._user.password) {
                 this._userValid = true;
-                console.log(this._userValid);
             }
             return this._userValid;
         },
         async cargarLista() {
-            console.log("results");
-            const response = await fetch(this._url + this._idLista);
+            /* const response = await fetch(this._url + this._idLista);
             const results = await response.json();
-            console.log(results);
+            console.log(results); */
+
+            let results = {
+                shoppingListName: "Lista 1",
+                products: [
+                    {
+                        id: 1,
+                        name: "Pepitos",
+                        brand: "Pepitos",
+                        price: 240.65,
+                        content: "400 gr",
+                        category: "Alacena",
+                        amount: 4
+                    },
+                    {
+                        id: 2,
+                        name: "Chocolinas",
+                        brand: "Chocolinas",
+                        price: 200.50,
+                        content: "450 gr",
+                        category: "Alacena",
+                        amount: 2
+                    },
+                    {
+                        id: 3,
+                        name: "Dulce de leche",
+                        brand: "La Serenisima",
+                        price: 323.15,
+                        content: "300 gr",
+                        category: "Heladera",
+                        amount: 1
+                    },
+                    {
+                        id: 4,
+                        name: "Queso crema",
+                        brand: "Cassancrem",
+                        price: 540.50,
+                        content: "600 gr",
+                        category: "Heladera",
+                        amount: 2
+                    },
+                    {
+                        id: 5,
+                        name: "Jugo de naranja",
+                        brand: "Cepita",
+                        price: 240.65,
+                        content: "200 ml",
+                        category: "Alacena",
+                        amount: 3
+                    },
+                ],
+            }
             this._listaDeCompras = results;
         },
     },
