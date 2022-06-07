@@ -41,14 +41,18 @@
         v-for="product in productosFav"
         :key="product.id"
       >
-        <AppProducto :product="product"></AppProducto>
+        <AppProducto @agregado="onAgregado" :product="product"></AppProducto>
       </div>
     </div>
 
     <div class="row mt-3">
       <h1 class="text-center mt-5">Ofertas</h1>
       <div class="col-sm-4 mt-4" v-for="product in ofertas" :key="product.id">
-        <AppProducto :product="product"></AppProducto>
+        <AppProducto
+          @agregado="onAgregado"
+          hasDiscount
+          :product="product"
+        ></AppProducto>
       </div>
     </div>
 
@@ -59,13 +63,17 @@
         v-for="product in stockGeneral"
         :key="product.id"
       >
-        <AppProducto :product="product"></AppProducto>
+        <AppProducto @agregado="onAgregado" :product="product"></AppProducto>
       </div>
+      <router-link to="/lista-de-compras" class="boton"
+        >Volver a Mi Lista</router-link
+      >
     </div>
   </div>
 </template>
 
 <script>
+import { useStore } from "../store/store.js";
 import AppProducto from "@/components/AppProducto.vue";
 export default {
   components: {
@@ -74,144 +82,165 @@ export default {
  
   data(){
     return{
-    prod:{ id: 1,
-    name: "Oreos pack x6",
-    brand:"Arcor",
-    price: 500.5,
-    category:"Galletitas",
-    amount: 3,},
-
-    productosFav: [
-  {
-    id: 1,
-    name: "Oreos",
-    brand:"arcor",
-    category:"Galletitas",
-    price: 120.5,
-    amount: 3,
-  },
-  {
-    id: 2,
-    name: "Chocolinas",
-    brand:"arcor",
-    category:"Galletitas",
-    price: 100.99,
-    amount: 3,
-  },
-  {
-    id: 4,
-    name: "Merengadas",
-    brand:"arcor",
-    category:"Galletitas",
-    price: 115.0,
-    amount: 3,
-  },
-   {
-    id: 5,
-    name: "Rumba",
-    brand:"arcor",
-    category:"Galletitas",
-    price: 115.0,
-    amount: 3,
-  },
+    productosFav: [{
+        id: 1,
+        name: "Pepitos",
+        brand: "Pepitos",
+        price: 240.65,
+        content: "400 gr",
+        category: "Alacena",
+                            
+    },
+    {
+        id: 2,
+        name: "Chocolinas",
+        brand: "Chocolinas",
+        price: 200.50,
+        content: "450 gr",
+        category: "Alacena",
+                            
+    },
+    {
+        id: 3,
+        name: "Dulce de leche",
+        brand: "La Serenisima",
+        price: 323.15,
+        content: "300 gr",
+        category: "Heladera",
+                              
+    },
+    {
+        id: 4,
+        name: "Queso crema",
+        brand: "Cassancrem",
+        price: 540.50,
+        content: "600 gr",
+        category: "Heladera",
+                            
+    },
+    {
+        d: 5,
+        name: "Jugo de naranja",
+        brand: "Cepita",
+        price: 240.65,
+        content: "200 ml",
+        category: "Alacena",
+    },
   ],
      ofertas: [
   {
-    id: 1,
+    id: 6,
     name: "Aceite 1,5Lt",
     brand:"Marolio",
     category:"Alacena",
+    discount: 10,
     price: 200,
   },
    {
-    id: 2,
+    id: 7,
     name: "Vino Malbec 2,25Lt",
     brand:"Elvi nito",
     category:"Bebidas",
+    discount: 20,
     price: 235,
   },
    {
-    id: 3,
+    id: 8,
     name: "Arroz 3x2 1 kg",
     brand:"Lucchetti",
     category:"Alacena",
+    discount: 33,
     price: 360,
   },
    {
-    id: 4,
+    id: 9,
     name: "Aceite 1,5Lt",
     brand:"Marolio",
     category:"Alacena",
+    discount: 25,
     price: 200,
   },
    {
-    id: 5,
+    id: 10,
     name: "Puré de tomate 520Gr",
     brand:"Día",
     category:"Alacena",
+    discount: 15,
     price: 59,
   },
   ],
     stockGeneral: [
   {
-    id: 1,
+    id: 11,
     name: "Servilletas 70U",
     brand:"Día",
     category:"Higiene y limpieza",
     price: 126,
   },
    {
-    id: 2,
+    id: 12,
     name: "Enjuage bucal Minty fresh(? 250Ml",
     brand:"Colgate",
     category:"Higiene y limpieza",
     price: 400.33,
    },
    {
-    id: 3,
+    id: 13,
     name: "Cerveza Lager 500Ml x6",
     brand:"Starberg",
     category:"Bebidas",
     price: 1100,
   },
    {
-    id: 4,
+    id: 14,
     name: "Salame Fetado Lario 150Gr",
     brand:"Milán",
     category:"Heladera",
     price: 200,
   },
    {
-    id: 5,
+    id: 15,
     name: "Nuez pelada en cubeta 100gr",
     brand:"La Sanjuanita",
     category:"Dietética",
     price: 239.25
   },
   {
-    id: 6,
+    id: 16,
     name: "Durazno en mitades 820Gr",
     brand:"Coto",
     category:"Almacen",
     price: 355
   },
   {
-    id: 7,
+    id: 17,
     name: "Milanesa de soja calabaza x4",
     brand:"Granja del Sol",
     category:"Congelados",
     price: 359
   },
   {
-    id: 8,
+    id: 18,
     name: "Palta x 1Un",
     brand:"Carrefour",
     category:"Frutas y verduras",
     price: 79.00,
   },
   ]
-  }}
-};
+  }
+  
+  },
+  setup() {
+    const store = useStore();
+    return { store };
+  },
+  methods: {
+    onAgregado (items) {
+      console.log(items)
+      //this.store.add(items.product.id, items.cantidad );
+      this.store.addProduct(items.producto, items.amount );
+    },
+}}
 </script>
 
 

@@ -18,6 +18,7 @@ export const useStore = defineStore('pruebaContador', {
             }
             return this._userValid;
         },
+
         async cargarLista() {
             /* const response = await fetch(this._url + this._idLista);
             const results = await response.json();
@@ -75,10 +76,20 @@ export const useStore = defineStore('pruebaContador', {
             }
             this._listaDeCompras = results;
         },
+        addProduct(product, amount) {
+            let prod = this._listaDeCompras.products.find(prod => prod.id === product.id)
+            if (prod == undefined) {
+                product.amount = amount
+                this._listaDeCompras.products.push(product)
+            } else {
+                console.log("Aumento")
+                prod.amount += amount
+            }
+        },
     },
     getters: {
         listaDeCompras() {
             return this._listaDeCompras;
         }
-    }
+    },
 })
