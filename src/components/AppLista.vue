@@ -2,7 +2,7 @@
   <div class="col px-1">
     <div class="nombreLista row mx-3">{{ nombre }}</div>
     <div class="lista mx-3 p-0 container">
-      <div class="precio row px-1 m-0">Precio: ${{ precio }}</div>
+      <div class="precio row px-1 m-0">Precio: ${{ precioTotal }}</div>
       <div
         class="producto row px-1 my-2"
         v-for="prod in listaProductos"
@@ -90,7 +90,6 @@ import { useStore } from "../store/store.js";
 
 export default {
   props: {
-    precio: Number,
     nombre: String,
   },
   data() {
@@ -124,6 +123,15 @@ export default {
         return val != producto;
       });
       return listaRemovida;
+    },
+  },
+  computed: {
+    precioTotal() {
+      let precio = 0;
+      for (let i = 0; i < this.listaProductos.length; i++) {
+        precio += this.listaProductos[i].price * this.listaProductos[i].amount;
+      }
+      return precio.toFixed([2]);
     },
   },
 };
