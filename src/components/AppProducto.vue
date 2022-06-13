@@ -1,37 +1,72 @@
 <template>
   <div class="container">
+    <div class="d-flex"></div>
+
     <div class="card text-center" style="width: 25rem">
-      <div class="card-body">
-        <h5 class="card-title">{{ product.name }}</h5>
+      <div class="card-body card-shadow">
+        <div @click="changeFav" class="text-end">
+          <img
+            v-if="esFavorito"
+            class="corazon"
+            src="../assets/heart-full.png"
+          />
+          <img
+            v-if="esFavorito == false"
+            class="corazon"
+            src="../assets/heart-empty.png"
+          />
+        </div>
+        <h4 class="card-title">{{ product.name }} - {{ product.brand }}</h4>
         <div class="row">
-          <h4 class="">Precio: ${{ product.price }}</h4>
-          <h6 v-if="hasDiscount">{{ product.discount }}% OFF</h6>
-          <h6 v-if="hasDiscount">
+          <h5 class="">Precio: ${{ product.price }}</h5>
+          <h6 v-if="product.discount != undefined">
+            {{ product.discount }}% OFF
+          </h6>
+          <h6 v-if="product.discount != undefined">
             Precio de lista:
             <s>
               {{ product.price * (product.discount / 100) + product.price }}
             </s>
           </h6>
           <h6 class="col-sm">{{ product.category }}</h6>
-          <h6 class="col-sm">Marca: {{ product.brand }}</h6>
         </div>
         <div class="row justify-content-center">
-          <button class="boton col-1 p-1" v-on:click="aumentarCantidad()">
-            +
-          </button>
-          <h5 class="col-1 mt-3 mx-1">{{ amount }}</h5>
-          <button class="boton col-1 p-1" v-on:click="disminuirCantidad()">
+          <button
+            class="boton col-1 p-1 m-1 h4"
+            v-on:click="disminuirCantidad()"
+          >
             -
           </button>
+          <h5 class="col-1 mt-3 mx-1">{{ amount }}</h5>
+          <button
+            class="boton col-1 p-1 m-1 h4"
+            v-on:click="aumentarCantidad()"
+          >
+            +
+          </button>
         </div>
-        <p class="card-text"></p>
-        <a href="#" class="boton" v-on:click="agregarProducto()"
-          >Agregar a la lista</a
-        >
-        <h6 class="">Subtotal ${{ subtotal }}</h6>
-        <h6 v-if="hasDiscount">
+        <div class="m-3">
+          <h6 class="">Subtotal ${{ subtotal }}</h6>
+          <a href="#" class="boton" v-on:click="agregarProducto()"
+            ><svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-basket mb-1"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1v4.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 13.5V9a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.217L5.07 1.243a.5.5 0 0 1 .686-.172zM2 9v4.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V9H2zM1 7v1h14V7H1zm3 3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 4 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 6 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 8 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5z"
+              />
+            </svg>
+            Agregar a la lista</a
+          >
+        </div>
+
+        <p class="text-secondary" v-if="product.discount != undefined">
           <i>Ahorrás ${{ ahorro }}</i>
-        </h6>
+        </p>
       </div>
     </div>
   </div>
@@ -45,12 +80,18 @@ export default {
       hasDiscount: {
         type: Boolean,
         default: false,
+      },
+      isFav: {
+        type: Boolean,
+        default: false,
       }
    },
     data() {
         return {
-          //Poner 1 para que muestre el ahorro o 0?
           amount: 0,
+          esFavorito: false,
+          fav: "../assets/heart-full.png",
+          notFav: "../assets/heart-empty.png",
         };
     },
     methods: {
@@ -65,6 +106,12 @@ export default {
       agregarProducto(){
         this.$emit('agregado', {producto: this.product
         , amount: this.amount})
+         this.amount = 0;
+      },
+      changeFav(){
+        this.esFavorito = !this.esFavorito;
+        this.$emit('clickCorazon', {producto: this.product
+        , esFavorito: this.esFavorito})
       }
     },
     computed:{
@@ -74,6 +121,9 @@ export default {
       ahorro: function(){
         return (this.subtotal * (this.product.discount / 100)).toFixed([2])
       }
+    },
+    created(){
+      this.esFavorito = this.isFav;
     }
 }
 </script>
@@ -100,5 +150,12 @@ export default {
   border-radius: 0.25rem;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
     border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.corazon {
+  width: 30px;
+  height: 30px;
+}
+.card-shadow:hover {
+  box-shadow: 0 0 11px rgba(255, 232, 216, 0.862);
 }
 </style>

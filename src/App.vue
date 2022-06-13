@@ -3,11 +3,11 @@
     <div class="header container-fluid display">
       <router-link to="/"><img src="./assets/logoListApp.png" /></router-link>
 
-      <router-link to="/config"
+      <router-link to="/config" class="text-end"
         ><img class="iconoBoton" src="./assets/engranaje.png"
       /></router-link>
 
-      <router-link to="/login"
+      <router-link to="/login" class="text-end"
         ><img class="iconoBoton" src="./assets/user.png"
       /></router-link>
     </div>

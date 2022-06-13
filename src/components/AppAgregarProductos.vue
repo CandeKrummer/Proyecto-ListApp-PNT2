@@ -10,10 +10,10 @@
             <input
               type="text"
               class="form-control ml-3 w-25"
-              id="valorFiltro"
+              v-model="filtro"
               placeholder="Buscar producto"
             />
-            <button class="btn boton-1">
+            <button v-on:click="filterLists" class="btn boton-1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -41,7 +41,12 @@
         v-for="product in productosFav"
         :key="product.id"
       >
-        <AppProducto @agregado="onAgregado" :product="product"></AppProducto>
+        <AppProducto
+          @agregado="onAgregado"
+          @clickCorazon="cambiarFavorito"
+          isFav
+          :product="product"
+        ></AppProducto>
       </div>
     </div>
 
@@ -50,6 +55,7 @@
       <div class="col-sm-4 mt-4" v-for="product in ofertas" :key="product.id">
         <AppProducto
           @agregado="onAgregado"
+          @clickCorazon="cambiarFavorito"
           hasDiscount
           :product="product"
         ></AppProducto>
@@ -63,9 +69,13 @@
         v-for="product in stockGeneral"
         :key="product.id"
       >
-        <AppProducto @agregado="onAgregado" :product="product"></AppProducto>
+        <AppProducto
+          @agregado="onAgregado"
+          @clickCorazon="cambiarFavorito"
+          :product="product"
+        ></AppProducto>
       </div>
-      <router-link to="/lista-de-compras" class="boton"
+      <router-link to="/lista-de-compras" class="boton fixed-bottom bg-light"
         >Volver a Mi Lista</router-link
       >
     </div>
@@ -79,9 +89,13 @@ export default {
   components: {
     AppProducto,
   },
- 
+  name:"AppAgregarProducto",
   data(){
     return{
+      filtro:'',
+      precioMin:0,
+      precioMax:0,
+
     productosFav: [{
         id: 1,
         name: "Pepitos",
@@ -138,8 +152,8 @@ export default {
   },
    {
     id: 7,
-    name: "Vino Malbec 2,25Lt",
-    brand:"Elvi nito",
+    name: "Vino Malbec 750 ml",
+    brand:"Dadá",
     category:"Bebidas",
     discount: 20,
     price: 235,
@@ -154,11 +168,11 @@ export default {
   },
    {
     id: 9,
-    name: "Aceite 1,5Lt",
+    name: "Aceite 1 Lt",
     brand:"Marolio",
     category:"Alacena",
-    discount: 25,
-    price: 200,
+    discount: 20,
+    price: 150,
   },
    {
     id: 10,
@@ -179,7 +193,7 @@ export default {
   },
    {
     id: 12,
-    name: "Enjuage bucal Minty fresh(? 250Ml",
+    name: "Enjuage bucal Minty fresh 250Ml",
     brand:"Colgate",
     category:"Higiene y limpieza",
     price: 400.33,
@@ -240,6 +254,35 @@ export default {
       //this.store.add(items.product.id, items.cantidad );
       this.store.addProduct(items.producto, items.amount );
     },
+    cambiarFavorito(items){
+      console.log(items.esFavorito)
+      if(items.esFavorito){
+        this.productosFav.push(items.producto)
+      }else{
+        //Sacar de prod fav
+        this.productosFav = this.productosFav.filter(function (val) {
+        return val != items.producto;
+        //VER TEMA OFERTAA
+      });
+      }
+    }
+    ,
+    filterLists() {
+      
+      this.productosFav = this.filtrarLista(this.productosFav)
+      this.ofertas = this.filtrarLista(this.ofertas)
+      this.stockGeneral = this.filtrarLista(this.stockGeneral)
+      
+      
+    },
+  filtrarLista(lista){
+    lista = lista.filter((prod) => {
+      let prodConcatenado = `${prod.name}${prod.brand}${prod.content}${prod.category}${prod.discount}`
+      console.log(prodConcatenado)
+      return prodConcatenado.toLowerCase().includes(this.filtro.toLowerCase())
+                });
+    return lista
+  }
 }}
 </script>
 
@@ -252,7 +295,6 @@ export default {
 }
 
 .boton-1:hover {
-  border: 2px solid #d5bfbd;
-  background-color: #a383c1;
+  background-color: #ede3fc;
 }
 </style>
