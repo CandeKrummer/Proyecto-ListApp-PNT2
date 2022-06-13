@@ -1,6 +1,6 @@
 <template>
   <div class="col px-1">
-    <div class="nombreLista row mx-3">{{ nombre }}</div>
+    <div class="nombreLista row mx-3">{{ nombreLista }}</div>
     <div class="lista mx-3 p-0 container">
       <div class="precio row px-1 m-0">Precio: ${{ precioTotal }}</div>
       <div
@@ -90,20 +90,17 @@ import { useStore } from "../store/store.js";
 
 export default {
   props: {
-    nombre: String,
+    lista: {},
   },
   data() {
     return {
-      nombreLista: "Lista",
-      listaProductos: [],
+      nombreLista: this.lista.shoppingListName,
+      listaProductos: this.lista.products,
     };
   },
   setup() {
     const store = useStore();
     return { store };
-  },
-  created() {
-    this.listaProductos = this.store.listaDeCompras.products;
   },
   methods: {
     sumarProducto(producto) {
