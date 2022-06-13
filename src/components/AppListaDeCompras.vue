@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-    <AppLista :precio="2559" :nombre="nombreLista"></AppLista>
+    <AppLista :lista="listaDeCompras"></AppLista>
   </div>
 </template>
 
@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      nombreLista: "",
+      listaDeCompras: {},
     };
   },
   setup() {
@@ -33,7 +33,7 @@ export default {
     return { store };
   },
   created() {
-    this.nombreLista = this.store.listaDeCompras.shoppingListName;
+    this.listaDeCompras = this.store.listaDeCompras;
   },
 };
 </script>

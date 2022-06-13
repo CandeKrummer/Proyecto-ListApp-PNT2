@@ -1,10 +1,10 @@
 <template>
-  <div class="col px-1">
-    <div class="nombreLista row mx-3">{{ nombre }}</div>
-    <div class="lista mx-3 p-0 container">
-      <div class="precio row px-1 m-0">Precio: ${{ precio }}</div>
+  <div class="col px-3">
+    <div class="nombreLista row mx-3">{{ nombreLista }}</div>
+    <div class="lista p-0 container-fluid">
+      <div class="precio row px-1 m-0">Precio: ${{ precioTotal }}</div>
       <div
-        class="producto row px-1 my-2"
+        class="producto row px-1 m-0"
         v-for="prod in listaProductos"
         :key="prod.id"
       >
@@ -90,12 +90,11 @@ import { useStore } from "../store/store.js";
 
 export default {
   props: {
-    precio: Number,
-    nombre: String,
+    lista: {},
   },
   data() {
     return {
-      nombreLista: "Lista",
+      nombreLista: "",
       listaProductos: [],
     };
   },
@@ -104,7 +103,8 @@ export default {
     return { store };
   },
   created() {
-    this.listaProductos = this.store.listaDeCompras.products;
+    this.nombreLista = this.lista.shoppingListName;
+    this.listaProductos = this.lista.products;
   },
   methods: {
     sumarProducto(producto) {
@@ -126,6 +126,15 @@ export default {
       return listaRemovida;
     },
   },
+  computed: {
+    precioTotal() {
+      let precio = 0;
+      for (let i = 0; i < this.listaProductos.length; i++) {
+        precio += this.listaProductos[i].price * this.listaProductos[i].amount;
+      }
+      return precio.toFixed([2]);
+    },
+  },
 };
 </script>
 
@@ -142,15 +151,7 @@ export default {
 }
 
 .precio {
-  border-bottom: 1px dotted black;
-}
-
-.sacar {
-  border: 1px solid black;
-  padding: 0;
-  width: 14px;
-  height: 14px;
-  background-color: transparent;
+  border-bottom: 2px dotted black;
 }
 
 .producto {
