@@ -1,11 +1,17 @@
 <template>
   <div>
-    <router-link to="/lista-de-compras" class="boton"
-      >Lista de compras</router-link
-    >
-    <router-link to="/alacena-virtual" class="boton"
-      >Alacena virtual</router-link
-    >
+    <div class="display justify-content-center">
+      <div class="p-3 mb-4">
+        <div class="col text-center">
+          <router-link to="/lista-de-compras" class="boton mx-5"
+            >Lista de compras</router-link
+          >
+          <router-link to="/alacena-virtual" class="boton mx-5"
+            >Alacena virtual</router-link
+          >
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

@@ -7,6 +7,7 @@ import AppAlacenaVirtual from "./components/AppAlacenaVirtual.vue";
 import AppAgregarProductos from "./components/AppAgregarProductos.vue";
 import AppLogin from "./components/AppLogin.vue";
 import AppConfig from "./components/AppConfig.vue";
+import AppHistorial from "./components/AppHistorial.vue";
 
 
 Vue.use(VueRouter)
@@ -48,11 +49,11 @@ const routes = [
         name: 'realizarCompra',
         component: AppAlacenaVirtual,
     },
-    // {
-    //     path: '/historial"',
-    //     name: 'historial',
-    //     component: AppHistorial,
-    // },
+    {
+        path: '/historial',
+        name: 'historial',
+        component: AppHistorial,
+    },
 
 ]
 
