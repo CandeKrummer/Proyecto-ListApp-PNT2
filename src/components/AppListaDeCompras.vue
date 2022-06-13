@@ -33,7 +33,7 @@ export default {
     return { store };
   },
   created() {
-    this.listaProductos = this.store.listaDeCompras.products;
+    this.listaDeCompras = this.store.listaDeCompras;
   },
 };
 </script>
