@@ -6,8 +6,9 @@ import AppListaDeCompras from "./components/AppListaDeCompras.vue";
 import AppAlacenaVirtual from "./components/AppAlacenaVirtual.vue";
 import AppAgregarProductos from "./components/AppAgregarProductos.vue";
 import AppLogin from "./components/AppLogin.vue";
+import AppLista from "./components/AppLista.vue";
 import AppConfig from "./components/AppConfig.vue";
-import AppHistorial from "./components/AppHistorial.vue";
+import AppComprasFavoritas from "./components/AppComprasFavoritas.vue";
 
 
 Vue.use(VueRouter)
@@ -50,11 +51,20 @@ const routes = [
         component: AppAlacenaVirtual,
     },
     {
-        path: '/historial',
-        name: 'historial',
-        component: AppHistorial,
+        path: '/compras-favoritas',
+        name: 'comprasFavoritas',
+        component: AppComprasFavoritas,
     },
-
+    {
+        path: '/lista',
+        name: 'lista',
+        component: AppLista,
+    },
+    {
+        path: "/lista/:lista",
+        name: "lista",
+        component: AppLista,
+    },
 ]
 
 const router = new VueRouter({
