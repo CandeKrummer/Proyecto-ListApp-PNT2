@@ -1,24 +1,35 @@
 <template>
   <div class="container">
     <h4>Compras favoritas</h4>
-    <div class="m-4" v-for="listaAct in listasFav" :key="listaAct.id">
-      <div class="" v-if="listaAct.id > 0">
-        <button class="boton" @click="detallarLista(listaAct)">
-          {{ listaAct.shoppingListName }}
-        </button>
 
-        <AppLista :lista="listaAct"></AppLista>
-
-        <!-- <router-link
-        :to="{ path: `/lista/${listaa}`, params: { lista: listaa } }"
-      >
-        {{ listaa.shoppingListName }}</router-link
-      > -->
+    <div class="row">
+      <div class="col m-1 p-0" v-for="listaAct in listasFav" :key="listaAct.id">
+        <div class="" v-if="listaAct.id > 0">
+          <h6>{{ listaAct.shoppingListName }}</h6>
+          <button
+            class="btn"
+            style="width: 10em; height: 10em"
+            @click="detallarLista(listaAct)"
+          >
+            <div class="card-body p-0">
+              <img
+                v-if="listaAct.id % 2 == 1"
+                class="cart p-0"
+                style="width: 8em; height: 8em"
+                src="../assets/cart-icon-1.png"
+              />
+              <img
+                v-if="listaAct.id % 2 == 0"
+                class="cart"
+                style="width: 8em; height: 8em"
+                src="../assets/cart-icon-2.png"
+              />
+            </div>
+          </button>
+        </div>
       </div>
     </div>
-    <div id="listaActual">
-      <AppLista :lista="listaADetallar"></AppLista>
-    </div>
+    <AppLista :lista="listaADetallar" />
   </div>
 </template>
 
@@ -114,17 +125,17 @@ export default {
   },
   methods:{
     detallarLista(listaAct){
-      console.log(this.listaADetallar)
-      console.log(this.idListaADetallar)
-      this.idListaADetallar = listaAct.id;
-      console.log(this.idListaADetallar)
-      console.log(this.listaADetallar)
-
+      this.idListaADetallar = listaAct.id
     }
   },
   computed:{
-    listaADetallar: function(){
-      return (this.listasFav[this.idListaADetallar]);
+    listaADetallar: {
+           get(){
+             return (this.listasFav[this.idListaADetallar])
+           },
+           set(){
+             return this.listaADetallar
+           } 
     }
   },
 
@@ -132,4 +143,8 @@ export default {
 </script>
 
 <style>
+.cart {
+  width: 5em;
+  height: 5em;
+}
 </style>

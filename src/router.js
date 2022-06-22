@@ -9,6 +9,7 @@ import AppLogin from "./components/AppLogin.vue";
 import AppLista from "./components/AppLista.vue";
 import AppConfig from "./components/AppConfig.vue";
 import AppComprasFavoritas from "./components/AppComprasFavoritas.vue";
+import AppHistorial from "./components/AppHistorial.vue";
 
 
 Vue.use(VueRouter)
@@ -59,6 +60,11 @@ const routes = [
         path: '/lista',
         name: 'lista',
         component: AppLista,
+    },
+    {
+        path: '/historial',
+        name: 'historial',
+        component: AppHistorial,
     },
     {
         path: "/lista/:lista",
