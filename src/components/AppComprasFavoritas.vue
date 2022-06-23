@@ -1,9 +1,29 @@
 <template>
   <div class="container">
     <h4>Compras favoritas</h4>
+    <div class="row m-5">
+      <div
+        class="col-sm m-1 p-0"
+        v-for="listaAct in listasFav"
+        :key="listaAct.id"
+      >
+        <div v-if="listaAct.id == 0">
+          <h6>Crear compra favorita</h6>
+          <button
+            class="btn"
+            style="width: 10em; height: 10em"
+            @click="crearLista = !crearLista"
+          >
+            <div class="card-body p-0">
+              <img
+                class="cart p-0"
+                style="width: 8em; height: 8em"
+                src="../assets/add-cart-icon-.png"
+              />
+            </div>
+          </button>
+        </div>
 
-    <div class="row">
-      <div class="col m-1 p-0" v-for="listaAct in listasFav" :key="listaAct.id">
         <div class="" v-if="listaAct.id > 0">
           <h6>{{ listaAct.shoppingListName }}</h6>
           <button
@@ -29,7 +49,36 @@
         </div>
       </div>
     </div>
-    <AppLista :lista="listaADetallar" />
+
+    <div class="boton text-start m-5 w-50" v-if="crearLista">
+      <form>
+        <div class="mb-3">
+          <label for="nombreLista" class="form-label text-center"
+            >¡Ingrese el nombre de su nueva lista!</label
+          >
+          <input
+            type="text"
+            class="form-control ml-3 w-75"
+            v-model="nombreNuevaLista"
+            placeholder="Nombre de la lista"
+          />
+          <div class="form-text">
+            Recordá que no podés tener 2 listas con el mismo nombre.
+          </div>
+        </div>
+        <button type="submit" class="boton" @click="crearNuevaLista()">
+          Crear
+        </button>
+      </form>
+    </div>
+    <div class="text-end">
+      <router-link
+        :to="{ name: 'agregarProductoConId', params: { id: '123' } }"
+        class="mx-5 boton"
+        >Agregar productos (En mantenimiento)</router-link
+      >
+      <AppLista :lista="listaADetallar" />
+    </div>
   </div>
 </template>
 
@@ -42,6 +91,8 @@ export default {
   name:"AppComprasFavoritas",
   data(){
         return{
+          crearLista: false,
+          nombreNuevaLista:'',
           idListaADetallar: 0,
           listasFav:[
             {
@@ -126,7 +177,13 @@ export default {
   methods:{
     detallarLista(listaAct){
       this.idListaADetallar = listaAct.id
-    }
+    },
+    crearNuevaLista(){
+      let lista ={id: this.listasFav.length, shoppingListName: this.nombreNuevaLista ,products: []}
+      this.listasFav.push(lista)
+      this.nombreNuevaLista = ''
+      this.crearLista = !this.crearLista
+    },
   },
   computed:{
     listaADetallar: {
