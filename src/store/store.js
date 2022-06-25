@@ -2,6 +2,9 @@ import { defineStore } from "pinia";
 
 export const useStore = defineStore('pruebaContador', {
     state: () => ({
+        _listedProducts: [
+
+        ],
         _listaDeCompras: {},
         _alacenaVirtual: [],
         _idFamily: 1,
