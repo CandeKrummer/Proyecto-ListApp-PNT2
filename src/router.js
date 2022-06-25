@@ -8,6 +8,7 @@ import AppAgregarProductos from "./components/AppAgregarProductos.vue";
 import AppLogin from "./components/AppLogin.vue";
 import AppConfig from "./components/AppConfig.vue";
 import AppHistorial from "./components/AppHistorial.vue";
+import AppRealizarCompra from "./components/AppRealizarCompra.vue";
 
 
 Vue.use(VueRouter)
@@ -47,7 +48,7 @@ const routes = [
     {
         path: '/realizar-compra"',
         name: 'realizarCompra',
-        component: AppAlacenaVirtual,
+        component: AppRealizarCompra,
     },
     {
         path: '/historial',

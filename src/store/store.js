@@ -3,8 +3,10 @@ import { defineStore } from "pinia";
 export const useStore = defineStore('pruebaContador', {
     state: () => ({
         _listaDeCompras: {},
+        _alacenaVirtual: [],
+        _idFamily: 1,
         _idLista: 4,
-        _url: "http://localhost:3000/shopping-lists/",
+        _url: "https://62b646096999cce2e800f9f0.mockapi.io/listapp/",
         _user: {
             mail: 'a@a.com',
             password: 'admin'
@@ -76,6 +78,13 @@ export const useStore = defineStore('pruebaContador', {
             }
             this._listaDeCompras = results;
         },
+        async cargarAlacenaVirtual() {
+            const response = await fetch(this._url + "shoppingList?IdFamily=" + this._idFamily);
+            const results = await response.json();
+            console.log(results);
+            this._alacenaVirtual = results.find(list => list.IdFamily === this._idFamily && list.category == "Alacena virtual")
+            console.log(this._alacenaVirtual);
+        },
         addProduct(product, amount) {
             let prod = this._listaDeCompras.products.find(prod => prod.id === product.id)
             if (prod == undefined) {
@@ -90,6 +99,9 @@ export const useStore = defineStore('pruebaContador', {
     getters: {
         listaDeCompras() {
             return this._listaDeCompras;
+        },
+        alacenaVirtual() {
+            return this._alacenaVirtual;
         }
     },
 })
