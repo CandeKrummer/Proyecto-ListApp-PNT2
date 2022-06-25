@@ -48,7 +48,7 @@ const routes = [
         component: AppAgregarProductos,
     },
     {
-        path: '/realizar-compra"',
+        path: '/realizar-compra',
         name: 'realizarCompra',
         component: AppRealizarCompra,
     },
