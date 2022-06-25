@@ -34,6 +34,7 @@ export default {
   },
   created() {
     this.listaDeCompras = this.store.listaDeCompras;
+    this.store.cambiarListaEnUso(this.listaDeCompras)
   },
 };
 </script>

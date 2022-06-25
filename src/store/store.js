@@ -3,7 +3,14 @@ import { defineStore } from "pinia";
 export const useStore = defineStore('pruebaContador', {
     state: () => ({
         _listaDeCompras: {},
+        _listaUsandose: {},
         _idLista: 4,
+        _listasFavoritas: [{
+            id: 0,
+            shoppingListName: "Crear nueva compra",
+            // fechaCreacion:"01/01/01",  
+            products: [],
+        }],
         _url: "http://localhost:3000/shopping-lists/",
         _user: {
             mail: 'a@a.com',
@@ -77,19 +84,33 @@ export const useStore = defineStore('pruebaContador', {
             this._listaDeCompras = results;
         },
         addProduct(product, amount) {
-            let prod = this._listaDeCompras.products.find(prod => prod.id === product.id)
+            console.log(this._listaUsandose)
+            let prod = this._listaUsandose.products.find(prod => prod.id === product.id)
             if (prod == undefined) {
                 product.amount = amount
-                this._listaDeCompras.products.push(product)
+                this._listaUsandose.products.push(product)
             } else {
                 console.log("Aumento")
                 prod.amount += amount
             }
         },
+        cambiarListaEnUso(lista) {
+            this._listaUsandose = lista;
+            console.log('1 ' + this._listaUsandose)
+        },
+        addListaFav(lista) {
+            this._listasFavoritas.push(lista)
+        }
     },
     getters: {
         listaDeCompras() {
             return this._listaDeCompras;
+        },
+        listaEnUso() {
+            return this._listaUsandose
+        },
+        listasFav() {
+            return this._listasFavoritas
         }
     },
 })

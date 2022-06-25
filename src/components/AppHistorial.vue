@@ -1,8 +1,7 @@
 <template>
   <div class="container">
-    <h1>Hola! Bienvenido a su historial</h1>
-    <div class="row">
-      <h3 class="m-2">Compras recientes</h3>
+    <h2 class="m-5">
+      Compras recientes
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="25"
@@ -18,7 +17,7 @@
           d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"
         />
       </svg>
-    </div>
+    </h2>
     <div v-for="lista in listasPasadas" :key="lista.id">
       <AppListaMinimizada :lista="lista" class="m-3" />
     </div>
