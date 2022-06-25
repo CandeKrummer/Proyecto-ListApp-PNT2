@@ -27,8 +27,8 @@
                 />
               </svg>
             </button>
-            <router-link to="/historial" class="mx-5 btn"
-              ><button class="boton">Ver historial</button></router-link
+            <router-link to="/compras-favoritas" class="mx-5 btn"
+              ><button class="boton">Compras favoritas</button></router-link
             >
           </form>
         </div>

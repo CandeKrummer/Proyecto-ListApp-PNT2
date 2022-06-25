@@ -90,7 +90,7 @@ import { useStore } from "../store/store.js";
 
 export default {
   props: {
-    lista: {},
+    lista: Object,
   },
   data() {
     return {
@@ -103,6 +103,7 @@ export default {
     return { store };
   },
   created() {
+    console.log(this.lista)
     this.nombreLista = this.lista.shoppingListName;
     this.listaProductos = this.lista.products;
   },
