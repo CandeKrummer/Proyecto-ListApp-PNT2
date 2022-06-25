@@ -1,93 +1,105 @@
 <template>
+  <!-- <div class="row flex-nowrap">
+    <div class="col-sm">
+      <AppSideBar />
+    </div> -->
   <div class="">
-    <div class="row justify-content-center">
-      <div class="p-3 mb-4">
-        <div class="text-center">
-          <form
-            class="d-flex align-items-sm-center justify-content-center mt-2"
-          >
-            <label for="valorFiltro" class="form-label"></label>
-            <input
-              type="text"
-              class="form-control ml-3 w-25"
-              v-model="filtro"
-              placeholder="Buscar producto"
-            />
-            <button v-on:click="filterLists" class="btn boton-1">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-search"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-                />
-              </svg>
-            </button>
-            <router-link to="/compras-favoritas" class="mx-5 btn"
-              ><button class="boton">Compras favoritas</button></router-link
+    <div class="col-py-3">
+      <div class="row justify-content-center">
+        <div class="p-3 mb-4">
+          <div class="text-center">
+            <form
+              class="d-flex align-items-sm-center justify-content-center mt-2"
             >
-          </form>
+              <label for="valorFiltro" class="form-label"></label>
+              <input
+                type="text"
+                class="form-control ml-3 w-25"
+                v-model="filtro"
+                placeholder="Buscar producto"
+              />
+              <button v-on:click="filterLists" class="btn boton-1">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-search"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+                  />
+                </svg>
+              </button>
+              <router-link to="/compras-favoritas" class="mx-5 btn"
+                ><button class="boton">Compras favoritas</button></router-link
+              >
+              <router-link to="/historial" class="mx-5 btn"
+                ><button class="boton">Historial</button></router-link
+              >
+            </form>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="row mx-0">
-      <h1 class="text-center mt-5">Productos Favoritos</h1>
-      <div
-        class="col-sm-4 mt-4"
-        v-for="product in productosFav"
-        :key="product.id"
-      >
-        <AppProducto
-          @agregado="onAgregado"
-          @clickCorazon="cambiarFavorito"
-          isFav
-          :product="product"
-        ></AppProducto>
+      <div class="row mx-0">
+        <h1 class="text-center mt-5">Productos Favoritos</h1>
+        <div
+          class="col-sm-4 mt-4"
+          v-for="product in productosFav"
+          :key="product.id"
+        >
+          <AppProducto
+            @agregado="onAgregado"
+            @clickCorazon="cambiarFavorito"
+            isFav
+            :product="product"
+          ></AppProducto>
+        </div>
       </div>
-    </div>
 
-    <div class="row mt-3">
-      <h1 class="text-center mt-5">Ofertas</h1>
-      <div class="col-sm-4 mt-4" v-for="product in ofertas" :key="product.id">
-        <AppProducto
-          @agregado="onAgregado"
-          @clickCorazon="cambiarFavorito"
-          hasDiscount
-          :product="product"
-        ></AppProducto>
+      <div class="row mt-3">
+        <h1 class="text-center mt-5">Ofertas</h1>
+        <div class="col-sm-4 mt-4" v-for="product in ofertas" :key="product.id">
+          <AppProducto
+            @agregado="onAgregado"
+            @clickCorazon="cambiarFavorito"
+            hasDiscount
+            :product="product"
+          ></AppProducto>
+        </div>
       </div>
-    </div>
 
-    <div class="row mx-0">
-      <h1 class="text-center mt-5">Stock general</h1>
-      <div
-        class="col-sm-4 mt-4"
-        v-for="product in stockGeneral"
-        :key="product.id"
-      >
-        <AppProducto
-          @agregado="onAgregado"
-          @clickCorazon="cambiarFavorito"
-          :product="product"
-        ></AppProducto>
+      <div class="row mx-0">
+        <h1 class="text-center mt-5">Stock general</h1>
+        <div
+          class="col-sm-4 mt-4"
+          v-for="product in stockGeneral"
+          :key="product.id"
+        >
+          <AppProducto
+            @agregado="onAgregado"
+            @clickCorazon="cambiarFavorito"
+            :product="product"
+          ></AppProducto>
+        </div>
+        <router-link to="/lista-de-compras" class="boton fixed-bottom bg-light"
+          >Volver a Mi Lista</router-link
+        >
       </div>
-      <router-link to="/lista-de-compras" class="boton fixed-bottom bg-light"
-        >Volver a Mi Lista</router-link
-      >
     </div>
+    <!-- </div> -->
   </div>
 </template>
 
 <script>
 import { useStore } from "../store/store.js";
 import AppProducto from "@/components/AppProducto.vue";
+// import AppSideBar from "@/components/AppSideBar.vue";
 export default {
   components: {
     AppProducto,
+    // AppSideBar
   },
   name:"AppAgregarProducto",
   data(){

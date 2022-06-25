@@ -32,14 +32,14 @@
         </div>
         <div class="row justify-content-center">
           <button
-            class="boton col-1 p-1 m-1 h4"
+            class="boton col-1 p-1 my-1 h4"
             v-on:click="disminuirCantidad()"
           >
             -
           </button>
-          <h5 class="col-1 mt-3 mx-1">{{ amount }}</h5>
+          <h5 class="col-4 mt-3 w-25">{{ amount }}</h5>
           <button
-            class="boton col-1 p-1 m-1 h4"
+            class="boton col-1 p-1 my-1 h4"
             v-on:click="aumentarCantidad()"
           >
             +
@@ -88,7 +88,7 @@ export default {
    },
     data() {
         return {
-          amount: 0,
+          amount: 1,
           esFavorito: false,
           fav: "../assets/heart-full.png",
           notFav: "../assets/heart-empty.png",

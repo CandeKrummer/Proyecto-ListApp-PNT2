@@ -7,6 +7,13 @@ export const useStore = defineStore('pruebaContador', {
         _idFamily: 1,
         _idLista: 4,
         _url: "https://62b646096999cce2e800f9f0.mockapi.io/listapp/",
+        _listaUsandose: {},
+        _listasFavoritas: [{
+            id: 0,
+            shoppingListName: "Crear nueva compra",
+            // fechaCreacion:"01/01/01",  
+            products: [],
+        }],
         _user: {
             mail: 'a@a.com',
             password: 'admin'
@@ -86,15 +93,23 @@ export const useStore = defineStore('pruebaContador', {
             console.log(this._alacenaVirtual);
         },
         addProduct(product, amount) {
-            let prod = this._listaDeCompras.products.find(prod => prod.id === product.id)
+            console.log(this._listaUsandose)
+            let prod = this._listaUsandose.products.find(prod => prod.id === product.id)
             if (prod == undefined) {
                 product.amount = amount
-                this._listaDeCompras.products.push(product)
+                this._listaUsandose.products.push(product)
             } else {
                 console.log("Aumento")
                 prod.amount += amount
             }
         },
+        cambiarListaEnUso(lista) {
+            this._listaUsandose = lista;
+            console.log('1 ' + this._listaUsandose)
+        },
+        addListaFav(lista) {
+            this._listasFavoritas.push(lista)
+        }
     },
     getters: {
         listaDeCompras() {
@@ -102,6 +117,12 @@ export const useStore = defineStore('pruebaContador', {
         },
         alacenaVirtual() {
             return this._alacenaVirtual;
+        },
+        listaEnUso() {
+            return this._listaUsandose
+        },
+        listasFav() {
+            return this._listasFavoritas
         }
     },
 })

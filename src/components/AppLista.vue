@@ -94,18 +94,13 @@ export default {
   },
   data() {
     return {
-      nombreLista: "",
-      listaProductos: [],
+      nombreLista: this.lista.shoppingListName,
+      listaProductos: this.lista.products,
     };
   },
   setup() {
     const store = useStore();
     return { store };
-  },
-  created() {
-    console.log(this.lista)
-    this.nombreLista = this.lista.shoppingListName;
-    this.listaProductos = this.lista.products;
   },
   methods: {
     sumarProducto(producto) {
@@ -135,7 +130,18 @@ export default {
       }
       return precio.toFixed([2]);
     },
+    contenidoProp(){
+      return this.lista
+    }
   },
+  watch:{
+    contenidoProp:{
+      handler:function(newVal){
+        this.nombreLista = newVal.shoppingListName
+         this.listaProductos = newVal.products
+      }
+    }
+  }
 };
 </script>
 
