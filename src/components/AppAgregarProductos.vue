@@ -46,7 +46,7 @@
         <h1 class="text-center mt-5">Productos Favoritos</h1>
         <div
           class="col-sm-4 mt-4"
-          v-for="product in productosFav"
+          v-for="product in prodsFavoritos"
           :key="product.id"
         >
           <AppProducto
@@ -72,20 +72,13 @@
 
       <div class="row mx-0">
         <h1 class="text-center mt-5">Stock general</h1>
-        <div
-          class="col-sm-4 mt-4"
-          v-for="product in stockGeneral"
-          :key="product.id"
-        >
+        <div class="col-sm-3 mt-5" v-for="product in Stock" :key="product.id">
           <AppProducto
             @agregado="onAgregado"
             @clickCorazon="cambiarFavorito"
             :product="product"
           ></AppProducto>
         </div>
-        <router-link to="/lista-de-compras" class="boton fixed-bottom bg-light"
-          >Volver a Mi Lista</router-link
-        >
       </div>
     </div>
     <!-- </div> -->
@@ -95,11 +88,9 @@
 <script>
 import { useStore } from "../store/store.js";
 import AppProducto from "@/components/AppProducto.vue";
-// import AppSideBar from "@/components/AppSideBar.vue";
 export default {
   components: {
     AppProducto,
-    // AppSideBar
   },
   name:"AppAgregarProducto",
   data(){
@@ -107,6 +98,10 @@ export default {
       filtro:'',
       precioMin:0,
       precioMax:0,
+
+      prodsFavoritos:[],
+      ofertitas:{},
+      Stock:[],
 
     productosFav: [{
         id: 1,
@@ -260,14 +255,39 @@ export default {
     const store = useStore();
     return { store };
   },
+  created(){
+    this.cargarStock()
+    this.cargarProdsFav()
+  },
   methods: {
+    
+    async cargarStock(){
+      // let response = await fetch(this.store.url+'shoppingList/'+0)
+      // let results = await response.json()
+      // this.Stock = results
+      // let prods = await this.store.getProductsFromList(0)
+      // this.Stock.products = prods
+      // console.log(this.Stock)
+      let response = await fetch(this.store.url+'products/')
+      let results = await response.json()
+      this.Stock = results
+      console.log(this.Stock)
+    },
+     async cargarProdsFav(){
+      let response = await fetch(this.store.url + "shoppingList?IdFamily=" + this.store.idFamily);
+      let results = await response.json();
+      results = results.find(list => list.IdFamily === this.store.idFamily && list.category == "Productos favoritos")
+      this.prodsFavoritos = await this.store.getProductsFromList(results.id)
+      
+      console.log(this.prodsFavoritos)
+    },
+
     onAgregado (items) {
       console.log(items)
       //this.store.add(items.product.id, items.cantidad );
       this.store.addProduct(items.producto, items.amount );
     },
     cambiarFavorito(items){
-      console.log(items.esFavorito)
       if(items.esFavorito){
         this.productosFav.push(items.producto)
       }else{
@@ -295,7 +315,8 @@ export default {
                 });
     return lista
   }
-}}
+}
+}
 </script>
 
 

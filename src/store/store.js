@@ -3,7 +3,18 @@ import { defineStore } from "pinia";
 export const useStore = defineStore('pruebaContador', {
     state: () => ({
         _listedProducts: [
+            {
+                id: 1,
+                IdList: 31,
+                IdProduct: 1,
+                amount: 2
+            },
+            {
+                id: 2,
+                IdList: 21,
+                IdProduct: 2,
 
+            },
         ],
         _listaDeCompras: {},
         _alacenaVirtual: [],
@@ -11,9 +22,10 @@ export const useStore = defineStore('pruebaContador', {
         _idLista: 4,
         _url: "https://62b646096999cce2e800f9f0.mockapi.io/listapp/",
         _listaUsandose: {},
+        _idListaEnUso: 0,
         _listasFavoritas: [{
             id: 0,
-            shoppingListName: "Crear nueva compra",
+            ShoppingListName: "Crear nueva compra",
             // fechaCreacion:"01/01/01",  
             products: [],
         }],
@@ -106,12 +118,25 @@ export const useStore = defineStore('pruebaContador', {
                 prod.amount += amount
             }
         },
-        cambiarListaEnUso(lista) {
-            this._listaUsandose = lista;
-            console.log('1 ' + this._listaUsandose)
+        cambiarListaEnUso(id) {
+            this._idListaEnUso = id;
+            console.log(this._listaUsandose)
         },
         addListaFav(lista) {
             this._listasFavoritas.push(lista)
+        },
+        async getProductsFromList(idList) {
+            let products = []
+            let listedProducts = this._listedProducts.filter(lp => lp.IdList == idList)
+            let product
+            // listedProducts.forEach(lp => () => {
+            for (let i = 0; i < listedProducts.length; i++) {
+                product = await fetch(this._url + 'products/' + listedProducts[i].IdProduct);
+                product = await product.json();
+                product.amount = listedProducts[i].amount
+                products.push(product)
+            }
+            return products
         }
     },
     getters: {
@@ -126,6 +151,12 @@ export const useStore = defineStore('pruebaContador', {
         },
         listasFav() {
             return this._listasFavoritas
+        },
+        idFamily() {
+            return this._idFamily
+        },
+        url() {
+            return this._url
         }
     },
 })

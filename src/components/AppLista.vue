@@ -94,7 +94,7 @@ export default {
   },
   data() {
     return {
-      nombreLista: this.lista.shoppingListName,
+      nombreLista: this.lista.ShoppingListName,
       listaProductos: this.lista.products,
     };
   },
@@ -137,7 +137,7 @@ export default {
   watch:{
     contenidoProp:{
       handler:function(newVal){
-        this.nombreLista = newVal.shoppingListName
+        this.nombreLista = newVal.ShoppingListName
          this.listaProductos = newVal.products
       }
     }
