@@ -61,9 +61,11 @@ export default {
   },
   created() {
     if (this.store.validarUsuario("a@a.com", "admin")) {
+      this.store.inicio();
+      /* this.store.cargarStock();
       this.store.cargarListedProducts();
       this.store.cargarLista();
-      this.store.cargarAlacenaVirtual();
+      this.store.cargarAlacenaVirtual(); */
     }
   },
 };

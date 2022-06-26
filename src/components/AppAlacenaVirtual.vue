@@ -49,6 +49,7 @@
       <div class="col-sm-4 mx-3" v-for="product in alacena" :key="product.id">
         <AppProductoEnAlacena
           @borrarDeAlacena="borrarProducto"
+          @restarDeAlacena="restarProducto"
           :product="product"
         ></AppProductoEnAlacena>
       </div>
@@ -76,8 +77,11 @@ export default {
     this.alacena = this.store.alacenaVirtual;
   },
   methods: {
-    borrarProducto(producto) {
-      console.log(producto);
+    restarProducto(producto, amount) {
+      console.log(producto + amount);
+    },
+    borrarProducto(producto, amount) {
+      console.log(producto + amount);
     },
   },
 };

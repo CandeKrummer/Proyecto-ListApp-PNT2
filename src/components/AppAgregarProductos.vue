@@ -92,97 +92,102 @@ export default {
   components: {
     AppProducto,
   },
-  name:"AppAgregarProducto",
-  data(){
-    return{
-      filtro:'',
-      precioMin:0,
-      precioMax:0,
+  name: "AppAgregarProducto",
+  data() {
+    return {
+      filtro: "",
+      precioMin: 0,
+      precioMax: 0,
 
-      prodsFavoritos:{},
+      prodsFavoritos: {},
       productosFavoritos: [],
-      ofertitas:{},
-      Stock:[],
-  }
-  
+      ofertitas: {},
+      Stock: [],
+    };
   },
   setup() {
     const store = useStore();
     return { store };
   },
-  created(){
-    console.log("ID lista en uso: "+ this.store.idLista)
-    this.cargarStock()
-    this.cargarProdsFav()
+  created() {
+    console.log("ID lista en uso: " + this.store.idLista);
+    this.Stock = this.store.stock;
+    this.cargarProdsFav();
   },
   methods: {
-    
-    async cargarStock(){
-      let response = await fetch(this.store.url+'products/')
-      let results = await response.json()
-      this.Stock = results
-      console.log(this.Stock)
-    },
-     async cargarProdsFav(){
-      let response = await fetch(this.store.url + "shoppingList?IdFamily=" + this.store.idFamily);
+    async cargarProdsFav() {
+      let response = await fetch(
+        this.store.url + "shoppingList?IdFamily=" + this.store.idFamily
+      );
       let results = await response.json();
-      this.prodsFavoritos = results.find(list => list.IdFamily === this.store.idFamily && list.category == "Productos favoritos")
-       console.log(this.prodsFavoritos)
-      this.productosFavoritos = await this.store.getProductsFromList(this.prodsFavoritos.id)
-      
-      console.log(this.prodsFavoritos)
+      this.prodsFavoritos = results.find(
+        (list) =>
+          list.IdFamily === this.store.idFamily &&
+          list.category == "Productos favoritos"
+      );
+      console.log(this.prodsFavoritos);
+      this.productosFavoritos = await this.store.getProductsFromList(
+        this.prodsFavoritos.id
+      );
+
+      console.log(this.prodsFavoritos);
     },
 
-    onAgregado (items) {
-      console.log("OnAgregado: AP")
-      if(items.amount > 0){
-        this.store.addProduct(items.producto, items.amount );
+    onAgregado(items) {
+      console.log("OnAgregado: AP");
+      if (items.amount > 0) {
+        this.store.addProduct(items.producto, items.amount);
       }
-     
     },
-    async cambiarFavorito(items){
-      console.log("hola?")
-      if(items.esFavorito){
-        console.log("hola? 2")
-        fetch(this.store.url+"/listedProducts", {
-              method: 'POST',
-              headers: {
-                'Accept': 'application/json, text/plain, */*',
-                'Content-Type': 'application/json'
-        },
-         body: JSON.stringify({IdList: this.prodsFavoritos.id, IdProduct: items.producto.id})
-            }).then(res => res.json())
-              .then(res => this.productosFavoritos.push(res))
-      }else{
-        let lp = await this.store.isProductOnList(this.prodsFavoritos.id, items.producto.id)
-        fetch(this.store.url+"/listedProducts/"+lp.id, {
-              method: 'DELETE',
-        }
-        // this.productosFav = this.productosFav.filter(function (val) {
-        // return val != items.producto;
-      // }
-      );
+    async cambiarFavorito(items) {
+      console.log("hola?");
+      if (items.esFavorito) {
+        console.log("hola? 2");
+        fetch(this.store.url + "/listedProducts", {
+          method: "POST",
+          headers: {
+            Accept: "application/json, text/plain, */*",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            IdList: this.prodsFavoritos.id,
+            IdProduct: items.producto.id,
+          }),
+        })
+          .then((res) => res.json())
+          .then((res) => this.productosFavoritos.push(res));
+      } else {
+        let lp = await this.store.isProductOnList(
+          this.prodsFavoritos.id,
+          items.producto.id
+        );
+        fetch(
+          this.store.url + "/listedProducts/" + lp.id,
+          {
+            method: "DELETE",
+          }
+          // this.productosFav = this.productosFav.filter(function (val) {
+          // return val != items.producto;
+          // }
+        );
       }
-      this.cargarProdsFav()
-    }
-    ,
+      this.cargarProdsFav();
+    },
     async filterLists() {
       // this.productosFav = this.filtrarLista(this.productosFav)
       // this.ofertas = this.filtrarLista(this.ofertas)
       // this.stockGeneral = this.filtrarLista(this.stockGeneral)
-       this.Stock = await this.filtrarLista()
-
-      
-      
+      this.Stock = await this.filtrarLista();
     },
-  async filtrarLista(){
- 
-    let listaFiltrada = await fetch(this.store.url + "products?filter="+this.filtro)
-    listaFiltrada = await listaFiltrada.json()
-    return listaFiltrada
-  }
-}
-}
+    async filtrarLista() {
+      let listaFiltrada = await fetch(
+        this.store.url + "products?filter=" + this.filtro
+      );
+      listaFiltrada = await listaFiltrada.json();
+      return listaFiltrada;
+    },
+  },
+};
 </script>
 
 

@@ -36,10 +36,17 @@ export default {
       if (this.amount > 1) {
         console.log("restar");
         this.amount--;
+        this.$emit("restarDeAlacena", {
+          producto: this.product,
+          amount: this.amount,
+        });
       } else if (this.amount <= 1) {
         this.amount = 0;
         console.log("borrar");
-        this.$emit("borrarDeAlacena", { producto: this.product });
+        this.$emit("borrarDeAlacena", {
+          producto: this.product,
+          amount: this.amount,
+        });
       }
     },
   },

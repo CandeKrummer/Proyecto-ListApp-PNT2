@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 
 export const useStore = defineStore('pruebaContador', {
     state: () => ({
+        _stock: [],
         _listedProducts: [],
         _listaDeCompras: {
             id: 1,
@@ -10,74 +11,9 @@ export const useStore = defineStore('pruebaContador', {
         },
         _alacenaVirtual: [],
         _idAlacenaVirtual: 2,
-        _listedProductoPrueba: [
-            {
-                IdList: 2,
-                IdProduct: 1,
-                amount: 2
-            },
-            {
-                IdList: 2,
-                IdProduct: 2,
-                amount: 3
-            },
-            {
-                IdList: 2,
-                IdProduct: 3,
-                amount: 1
-            },
-            {
-                IdList: 2,
-                IdProduct: 4,
-                amount: 1
-            },
-            {
-                IdList: 2,
-                IdProduct: 5,
-                amount: 4
-            },
-            {
-                IdList: 1,
-                IdProduct: 1,
-                IdUser: 2,
-                amount: 4
-            },
-            {
-                IdList: 1,
-                IdProduct: 2,
-                IdUser: 2,
-                amount: 2
-            },
-            {
-                IdList: 1,
-                IdProduct: 3,
-                IdUser: 2,
-                amount: 1
-            },
-            {
-                IdList: 1,
-                IdProduct: 4,
-                IdUser: 2,
-                amount: 2
-            },
-            {
-                IdList: 1,
-                IdProduct: 5,
-                IdUser: 2,
-                amount: 3
-            },
-        ],
         _idFamily: 1,
-        _idLista: 4,
         _url: "https://62b646096999cce2e800f9f0.mockapi.io/listapp/",
-        _listaUsandose: {},
         _idListaEnUso: 1,
-        _listasFavoritas: [{
-            id: 0,
-            ShoppingListName: "Crear nueva compra",
-            // fechaCreacion:"01/01/01",  
-            products: [],
-        }],
         _user: {
             mail: 'a@a.com',
             password: 'admin'
@@ -91,14 +27,27 @@ export const useStore = defineStore('pruebaContador', {
             }
             return this._userValid;
         },
+        async inicio() {
+            await this.cargarStock();
+            await this.cargarListedProducts();
+            await this.cargarLista();
+            await this.cargarAlacenaVirtual();
+        },
+        async cargarStock() {
+            let response = await fetch(this._url + 'products/')
+            let results = await response.json()
+            this._stock = results
+            console.log("carga stock")
+            console.log(this._stock)
+        },
         async cargarListedProducts() {
             const response = await fetch(this._url + "listedProducts");
             const results = await response.json();
             this._listedProducts = results;
+            console.log("carga lp")
             console.log(this._listedProducts)
         },
         async cargarLista() {
-            //console.log("cargar lista")
             const response = await fetch(this._url + "shoppingList?IdFamily=" + this._idFamily);
             const results = await response.json();
             //busco la lista de compras de la familia
@@ -110,14 +59,15 @@ export const useStore = defineStore('pruebaContador', {
             let listedProductsListaDeCompras = this._listedProducts.filter(lp => lp.IdList == listaCompras.id);
             //agrego cada producto junto con su cantidad en la lista de compras
             for (let i = 0; i < listedProductsListaDeCompras.length; i++) {
-                const responseProduct = await fetch(this._url + "products/" + listedProductsListaDeCompras[i].IdProduct);
-                const product = await responseProduct.json();
+                let product = this._stock.find(p => p.id == listedProductsListaDeCompras[i].IdProduct);
                 product.amount = listedProductsListaDeCompras[i].amount;
-                /*                 const responseUser = await fetch(this._url + "user/" + listedProductsListaDeCompras[i].IdUser);
-                                const user = await responseUser.json();
-                                product.user = user.name; */
+                /* const responseUser = await fetch(this._url + "user/" + listedProductsListaDeCompras[i].IdUser);
+                const user = await responseUser.json();
+                product.user = user.name; */
                 this._listaDeCompras.products.push(product)
             }
+            console.log("cargar lista")
+            console.log(this._listaDeCompras)
         },
         async cargarAlacenaVirtual() {
             const response = await fetch(this._url + "shoppingList?IdFamily=" + this._idFamily);
@@ -130,11 +80,11 @@ export const useStore = defineStore('pruebaContador', {
             let listedProductsAlacena = this._listedProducts.filter(lp => lp.IdList == this._idAlacenaVirtual)
             //agrego cada producto junto con su cantidad en la alacena
             for (let i = 0; i < listedProductsAlacena.length; i++) {
-                const responseProduct = await fetch(this._url + "products/" + listedProductsAlacena[i].IdProduct);
-                const product = await responseProduct.json();
+                let product = this._stock.find(p => p.id == listedProductsAlacena[i].IdProduct);
                 product.amount = listedProductsAlacena[i].amount;
                 this._alacenaVirtual.push(product)
             }
+            console.log("carga alacena virtual")
             console.log(this._alacenaVirtual)
         },
         async moverProductosAlacena() {
@@ -257,6 +207,56 @@ export const useStore = defineStore('pruebaContador', {
                 products.push(product)
             }
             return products
+        },
+        async actualizarCantListaDeCompras(producto) {
+            let prod = this._listaDeCompras.products.find(prod => prod.id == producto.id)
+            prod.amount = producto.amount
+            let lp = this._listedProducts.find(lp => lp.IdList == this._listaDeCompras.id && lp.IdProduct == producto.id)
+            lp.amount = producto.amount
+            await this.modificarCantListedProduct(lp)
+        },
+        async sacarListaDeCompras(producto) {
+            this._listaDeCompras.products = this._listaDeCompras.products.filter(function (val) {
+                return val != producto;
+            })
+            let lp = this._listedProducts.find(lp => lp.IdList == this._listaDeCompras.id && lp.IdProduct == producto.id)
+            this._listedProducts = this._listedProducts.filter(function (val) {
+                return val != lp;
+            })
+            await this.sacarListedProduct(lp)
+        },
+        async restarAlacena(amount) {
+            console.log("restarAlacena" + amount)
+        },
+        async sacarAlacena(producto) {
+            console.log("sacarAlacena" + producto)
+        },
+        async modificarCantListedProduct(lp) {
+            fetch(this._url + "/listedProducts/" + lp.id, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ amount: lp.amount })
+            }).then(res => {
+                res.json()
+                console.log("lp modificado")
+                console.log(res)
+            })
+        },
+        async sacarListedProduct(lp) {
+            fetch(this._url + "/listedProducts/" + lp.id, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                }
+            }).then(res => {
+                res.json()
+                console.log("lp eliminado")
+                console.log(res)
+            })
         }
     },
     getters: {
@@ -265,9 +265,6 @@ export const useStore = defineStore('pruebaContador', {
         },
         alacenaVirtual() {
             return this._alacenaVirtual;
-        },
-        listaEnUso() {
-            return this._listaUsandose
         },
         listasFav() {
             return this._listasFavoritas
@@ -280,6 +277,9 @@ export const useStore = defineStore('pruebaContador', {
         },
         idLista() {
             return this._idListaEnUso
+        },
+        stock() {
+            return this._stock;
         }
     },
 })

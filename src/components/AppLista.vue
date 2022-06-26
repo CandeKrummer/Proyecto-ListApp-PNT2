@@ -94,9 +94,13 @@ export default {
   },
   data() {
     return {
-      nombreLista: this.lista.ShoppingListName,
-      listaProductos: this.lista.products,
+      nombreLista: "",
+      listaProductos: [],
     };
+  },
+  created() {
+    this.listaProductos = this.lista.products;
+    this.nombreLista = this.lista.ShoppingListName;
   },
   setup() {
     const store = useStore();
@@ -104,16 +108,23 @@ export default {
   },
   methods: {
     sumarProducto(producto) {
+      console.log(producto.amount);
       producto.amount++;
+      console.log(producto.amount);
+      //this.store.actualizarCantListaDeCompras(producto);
     },
     restarProducto(producto) {
+      console.log(producto.amount);
       producto.amount--;
+      console.log(producto.amount);
       if (producto.amount <= 0) {
-        this.listaProductos = this.remove(this.listaProductos, producto);
+        this.sacarProducto(producto);
       }
+      //this.store.actualizarCantListaDeCompras(producto);
     },
     sacarProducto(producto) {
       this.listaProductos = this.remove(this.listaProductos, producto);
+      this.store.sacarListaDeCompras(producto);
     },
     remove(lista, producto) {
       let listaRemovida = lista.filter(function (val) {
@@ -130,18 +141,18 @@ export default {
       }
       return precio.toFixed([2]);
     },
-    contenidoProp(){
-      return this.lista
-    }
+    /*     contenidoProp() {
+      return this.lista;
+    }, */
   },
-  watch:{
-    contenidoProp:{
-      handler:function(newVal){
-        this.nombreLista = newVal.ShoppingListName
-         this.listaProductos = newVal.products
-      }
-    }
-  }
+  /*   watch: {
+    contenidoProp: {
+      handler: function (newVal) {
+        this.nombreLista = newVal.ShoppingListName;
+        this.listaProductos = newVal.products;
+      },
+    },
+  }, */
 };
 </script>
 
