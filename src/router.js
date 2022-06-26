@@ -67,11 +67,6 @@ const routes = [
         name: 'historial',
         component: AppHistorial,
     },
-    {
-        path: "/lista/:lista",
-        name: "lista",
-        component: AppLista,
-    },
 ]
 
 const router = new VueRouter({

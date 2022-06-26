@@ -4,7 +4,7 @@
     <div class="row m-5">
       <div
         class="col-sm m-1 p-0"
-        v-for="listaAct in listasFavoritas"
+        v-for="listaAct in listasFav"
         :key="listaAct.id"
       >
         <div v-if="listaAct.id == 0">
@@ -25,7 +25,7 @@
         </div>
 
         <div class="" v-if="listaAct.id > 0">
-          <h6>{{ listaAct.shoppingListName }}</h6>
+          <h6>{{ listaAct.ShoppingListName }}</h6>
           <button
             class="btn"
             style="width: 10em; height: 10em"
@@ -131,111 +131,59 @@ export default {
         return{
           crearLista: false,
           nombreNuevaLista:'',
+          loaded: false,
           idListaADetallar: 0,
           listasFavoritas:[],
           listasFav:[
             {
             id: 0,
-            shoppingListName: "Crear nueva compra",
-                // fechaCreacion:"01/01/01",  
+            ShoppingListName: "Crear nueva compra",
             products:[],
           }, 
-          {      
-            id: 1,
-            shoppingListName: "Compra mes",
-                // fechaCreacion:"01/01/01",  
-            products:[{
-                id: 6,
-                name: "Aceite 1,5Lt",
-                brand:"Marolio",
-                category:"Alacena",
-                discount: 10,
-                amount: 2,
-                price: 200,
-               },
-               {
-                id: 9,
-                name: "Aceite 1 Lt",
-                brand:"Marolio",
-                category:"Alacena",
-                discount: 20,
-                amount: 2,
-                price: 150,
-               },
-                {
-                id: 10,
-                name: "Puré de tomate 520Gr",
-                brand:"Día",
-                category:"Alacena",
-                discount: 15,
-                amount: 2,
-                price: 59,
-                }],
-          },
-          {
-            id: 2,
-            shoppingListName: "Compra semana",
-                // fechaCreacion:"01/01/01",  
-             products:[{
-                    id: 24,
-                    name: "Acelga congelada 500gr",
-                    brand:"Granja del sol",
-                    category:"Congelados",
-                    discount: 10,
-                    amount: 3,
-                    price: 200,
-                },
-                {
-                    id: 25,
-                    name: "Yerba 1Kg",
-                    brand:"Dos rosas",
-                    category:"Alacena",
-                    discount: 20,
-                    amount: 3,
-                    price: 400,
-                },
-                    {
-                    id: 26,
-                    name: "Halls menta x6",
-                    brand:"Halls",
-                    category:"Alacena",
-                    discount: 15,
-                    amount: 2,
-                    price: 70,
-                }]
-            }],
+          ],
            
         };
   },
   setup() {
-    const store = useStore();
+     const store = useStore();
     return { store };
   },
-  created(){
-    this.listasFavoritas = this.store.listasFav
-    this.listaADetallar = this.listasFavoritas[0];
+   created(){
+
+    this.listaADetallar = this.listasFav[0];
     this.idListaADetallar = 0;
-    
+    this.getFavLists() 
   },
   methods:{
     detallarLista(listaAct){
-      this.idListaADetallar = listaAct.id
-    },
+    this.idListaADetallar = this.listasFav.indexOf(listaAct)
+    this.store.cambiarListaEnUso(listaAct.id)
+
+   },
     crearNuevaLista(){
       if(this.nombreNuevaLista != ''){
           let exists = false;
           let i = 0;
-          while(i < this.listasFavoritas.length && !exists){
-            if(this.listasFavoritas[i].shoppingListName == this.nombreNuevaLista){
+          while(i < this.listasFav.length && !exists){
+            if(this.listasFav[i].ShoppingListName == this.nombreNuevaLista){
               exists = true
             }
             i++
           }
           if(!exists && this.nombreNuevaLista != ''){
-            let lista ={id: this.listasFavoritas.length, shoppingListName: this.nombreNuevaLista ,products: []}
-            this.listasFavoritas.push(lista)
-            this.nombreNuevaLista = ''
-            this.crearLista = !this.crearLista
+            fetch(this.store.url+"/shoppingList", {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ShoppingListName: this.nombreNuevaLista, category: 'Compra favorita', IdFamily: this.store.idFamily})
+            }).then(res => res.json())
+              .then(res => this.listasFav.push(res))
+              // let lista ={id: this.listasFavoritas.length, ShoppingListName: this.nombreNuevaLista ,products: []}
+             
+              this.nombreNuevaLista = ''
+              this.crearLista = !this.crearList
           }else{
             document.getElementById('error-on-create').innerHTML = '';
             document.getElementById('error-on-create').insertAdjacentHTML("afterbegin",`
@@ -274,11 +222,10 @@ export default {
              El nombre no puede estar vacío!
           </div>`)
       }
-    
       
     },
     cambiarListaEnUso(){
-       this.store.cambiarListaEnUso(this.listaADetallar)
+      console.log("BORRAR: "+this.listaADetallar.id)
     },
     agregarALista(){
       this.store.cambiarListaEnUso(this.store.listaDeCompras)
@@ -286,15 +233,29 @@ export default {
         this.store.addProduct(producto, producto.amount);
       });
       
+    },
+    async getFavLists(){
+      let list;
+      let productos;
+      let response = await fetch(this.store.url + "shoppingList?IdFamily=" + this.store.idFamily);
+      let results = await response.json();
+      results = results.filter(list => list.IdFamily === this.store.idFamily && list.category == "Compra favorita")
+      for(let i = 0; i < results.length; i++){
+        list = results[i]
+          productos = await this.store.getProductsFromList(list.id)
+          list.products = productos
+          
+          this.listasFav.push(list)
+      }
     }
   },
   computed:{
     listaADetallar: {
            get(){
-             return (this.listasFavoritas[this.idListaADetallar])
+             return (this.listasFav[this.idListaADetallar])
            },
            set(){
-             return this.listaADetallar
+            (this.listasFav[this.idListaADetallar])
            } 
     }
   },

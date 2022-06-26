@@ -2,7 +2,20 @@ import { defineStore } from "pinia";
 
 export const useStore = defineStore('pruebaContador', {
     state: () => ({
-        _listedProducts: [],
+        _listedProducts: [
+            {
+                id: 1,
+                IdList: 31,
+                IdProduct: 1,
+                amount: 2
+            },
+            {
+                id: 2,
+                IdList: 21,
+                IdProduct: 2,
+
+            },
+        ],
         _listaDeCompras: {
             id: 0,
             shoppingListName: "",
@@ -71,9 +84,10 @@ export const useStore = defineStore('pruebaContador', {
         _idLista: 4,
         _url: "https://62b646096999cce2e800f9f0.mockapi.io/listapp/",
         _listaUsandose: {},
+        _idListaEnUso: 0,
         _listasFavoritas: [{
             id: 0,
-            shoppingListName: "Crear nueva compra",
+            ShoppingListName: "Crear nueva compra",
             // fechaCreacion:"01/01/01",  
             products: [],
         }],
@@ -160,23 +174,69 @@ export const useStore = defineStore('pruebaContador', {
             await this.cargarAlacenaVirtual();
 
         },
-        addProduct(product, amount) {
-            console.log(this._listaUsandose)
-            let prod = this._listaUsandose.products.find(prod => prod.id === product.id)
-            if (prod == undefined) {
-                product.amount = amount
-                this._listaUsandose.products.push(product)
+        async addProduct(product, amount) {
+            let lp = await this.isProductOnList(this._idListaEnUso, product.id)
+            if (lp == undefined) {
+                fetch(this._url + "/listedProducts", {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ IdList: this._idListaEnUso, IdProduct: product.id, amount: amount })
+                }).then(res => res.json())
+                    .then(res => console.log(res))
             } else {
-                console.log("Aumento")
-                prod.amount += amount
+                let cantidad = lp.amount + amount
+                fetch(this._url + "/listedProducts/" + lp.id, {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ IdList: this._idListaEnUso, IdProduct: product.id, amount: cantidad })
+                }).then(res => res.json())
+                    .then(res => console.log(res))
             }
         },
-        cambiarListaEnUso(lista) {
-            this._listaUsandose = lista;
-            console.log('1 ' + this._listaUsandose)
+        async isProductOnList(idList, prodId) {
+            let listedProduct
+            let i = 0
+            let products = await this.getListedProdFromList(idList)
+            console.log(products)
+            while (i < products.length && listedProduct == undefined) {
+                if (products[i].IdProduct == prodId) {
+                    listedProduct = products[i]
+                }
+                i++
+            }
+            console.log(listedProduct)
+            return listedProduct
+        },
+        cambiarListaEnUso(id) {
+            this._idListaEnUso = id;
         },
         addListaFav(lista) {
             this._listasFavoritas.push(lista)
+        },
+        async getListedProdFromList(idList) {
+            let lps = await fetch(this._url + "listedProducts?IdList=" + idList);
+            lps = await lps.json();
+            lps = lps.filter(prod => prod.IdList == idList)
+            return lps
+        },
+        async getProductsFromList(idList) {
+            let products = []
+            let listedProducts = await this.getListedProdFromList(idList)
+            let product
+            for (let i = 0; i < listedProducts.length; i++) {
+                product = await fetch(this._url + 'products/' + listedProducts[i].IdProduct);
+                console.log("")
+                product = await product.json();
+                product.amount = listedProducts[i].amount
+                products.push(product)
+            }
+            return products
         }
     },
     getters: {
@@ -191,6 +251,15 @@ export const useStore = defineStore('pruebaContador', {
         },
         listasFav() {
             return this._listasFavoritas
+        },
+        idFamily() {
+            return this._idFamily
+        },
+        url() {
+            return this._url
+        },
+        idLista() {
+            return this._idListaEnUso
         }
     },
 })

@@ -46,7 +46,7 @@
         <h1 class="text-center mt-5">Productos Favoritos</h1>
         <div
           class="col-sm-4 mt-4"
-          v-for="product in productosFav"
+          v-for="product in productosFavoritos"
           :key="product.id"
         >
           <AppProducto
@@ -58,7 +58,7 @@
         </div>
       </div>
 
-      <div class="row mt-3">
+      <!-- <div class="row mt-3">
         <h1 class="text-center mt-5">Ofertas</h1>
         <div class="col-sm-4 mt-4" v-for="product in ofertas" :key="product.id">
           <AppProducto
@@ -68,24 +68,17 @@
             :product="product"
           ></AppProducto>
         </div>
-      </div>
+      </div> -->
 
       <div class="row mx-0">
         <h1 class="text-center mt-5">Stock general</h1>
-        <div
-          class="col-sm-4 mt-4"
-          v-for="product in stockGeneral"
-          :key="product.id"
-        >
+        <div class="col-sm-3 mt-5" v-for="product in Stock" :key="product.id">
           <AppProducto
             @agregado="onAgregado"
             @clickCorazon="cambiarFavorito"
             :product="product"
           ></AppProducto>
         </div>
-        <router-link to="/lista-de-compras" class="boton fixed-bottom bg-light"
-          >Volver a Mi Lista</router-link
-        >
       </div>
     </div>
     <!-- </div> -->
@@ -95,11 +88,9 @@
 <script>
 import { useStore } from "../store/store.js";
 import AppProducto from "@/components/AppProducto.vue";
-// import AppSideBar from "@/components/AppSideBar.vue";
 export default {
   components: {
     AppProducto,
-    // AppSideBar
   },
   name:"AppAgregarProducto",
   data(){
@@ -108,151 +99,10 @@ export default {
       precioMin:0,
       precioMax:0,
 
-    productosFav: [{
-        id: 1,
-        name: "Pepitos",
-        brand: "Pepitos",
-        price: 240.65,
-        content: "400 gr",
-        category: "Alacena",
-                            
-    },
-    {
-        id: 2,
-        name: "Chocolinas",
-        brand: "Chocolinas",
-        price: 200.50,
-        content: "450 gr",
-        category: "Alacena",
-                            
-    },
-    {
-        id: 3,
-        name: "Dulce de leche",
-        brand: "La Serenisima",
-        price: 323.15,
-        content: "300 gr",
-        category: "Heladera",
-                              
-    },
-    {
-        id: 4,
-        name: "Queso crema",
-        brand: "Cassancrem",
-        price: 540.50,
-        content: "600 gr",
-        category: "Heladera",
-                            
-    },
-    {
-        d: 5,
-        name: "Jugo de naranja",
-        brand: "Cepita",
-        price: 240.65,
-        content: "200 ml",
-        category: "Alacena",
-    },
-  ],
-     ofertas: [
-  {
-    id: 6,
-    name: "Aceite 1,5Lt",
-    brand:"Marolio",
-    category:"Alacena",
-    discount: 10,
-    price: 200,
-  },
-   {
-    id: 7,
-    name: "Vino Malbec 750 ml",
-    brand:"Dadá",
-    category:"Bebidas",
-    discount: 20,
-    price: 235,
-  },
-   {
-    id: 8,
-    name: "Arroz 3x2 1 kg",
-    brand:"Lucchetti",
-    category:"Alacena",
-    discount: 33,
-    price: 360,
-  },
-   {
-    id: 9,
-    name: "Aceite 1 Lt",
-    brand:"Marolio",
-    category:"Alacena",
-    discount: 20,
-    price: 150,
-  },
-   {
-    id: 10,
-    name: "Puré de tomate 520Gr",
-    brand:"Día",
-    category:"Alacena",
-    discount: 15,
-    price: 59,
-  },
-  ],
-    stockGeneral: [
-  {
-    id: 11,
-    name: "Servilletas 70U",
-    brand:"Día",
-    category:"Higiene y limpieza",
-    price: 126,
-  },
-   {
-    id: 12,
-    name: "Enjuage bucal Minty fresh 250Ml",
-    brand:"Colgate",
-    category:"Higiene y limpieza",
-    price: 400.33,
-   },
-   {
-    id: 13,
-    name: "Cerveza Lager 500Ml x6",
-    brand:"Starberg",
-    category:"Bebidas",
-    price: 1100,
-  },
-   {
-    id: 14,
-    name: "Salame Fetado Lario 150Gr",
-    brand:"Milán",
-    category:"Heladera",
-    price: 200,
-  },
-   {
-    id: 15,
-    name: "Nuez pelada en cubeta 100gr",
-    brand:"La Sanjuanita",
-    category:"Dietética",
-    price: 239.25
-  },
-  {
-    id: 16,
-    name: "Durazno en mitades 820Gr",
-    brand:"Coto",
-    category:"Almacen",
-    price: 355
-  },
-  {
-    id: 17,
-    name: "Milanesa de soja calabaza x4",
-    brand:"Granja del Sol",
-    category:"Congelados",
-    price: 359
-  },
-  {
-    id: 18,
-    name: "Palta x 1Un",
-    brand:"Carrefour",
-    category:"Frutas y verduras",
-    price: 79.00,
-  },
-  ]
+      prodsFavoritos:{},
+      productosFavoritos: [],
+      ofertitas:{},
+      Stock:[],
   }
   
   },
@@ -260,42 +110,79 @@ export default {
     const store = useStore();
     return { store };
   },
+  created(){
+    console.log("ID lista en uso: "+ this.store.idLista)
+    this.cargarStock()
+    this.cargarProdsFav()
+  },
   methods: {
-    onAgregado (items) {
-      console.log(items)
-      //this.store.add(items.product.id, items.cantidad );
-      this.store.addProduct(items.producto, items.amount );
+    
+    async cargarStock(){
+      let response = await fetch(this.store.url+'products/')
+      let results = await response.json()
+      this.Stock = results
+      console.log(this.Stock)
     },
-    cambiarFavorito(items){
-      console.log(items.esFavorito)
-      if(items.esFavorito){
-        this.productosFav.push(items.producto)
-      }else{
-        //Sacar de prod fav
-        this.productosFav = this.productosFav.filter(function (val) {
-        return val != items.producto;
-        //VER TEMA OFERTAA
-      });
+     async cargarProdsFav(){
+      let response = await fetch(this.store.url + "shoppingList?IdFamily=" + this.store.idFamily);
+      let results = await response.json();
+      this.prodsFavoritos = results.find(list => list.IdFamily === this.store.idFamily && list.category == "Productos favoritos")
+       console.log(this.prodsFavoritos)
+      this.productosFavoritos = await this.store.getProductsFromList(this.prodsFavoritos.id)
+      
+      console.log(this.prodsFavoritos)
+    },
+
+    onAgregado (items) {
+      console.log("OnAgregado: AP")
+      if(items.amount > 0){
+        this.store.addProduct(items.producto, items.amount );
       }
+     
+    },
+    async cambiarFavorito(items){
+      console.log("hola?")
+      if(items.esFavorito){
+        console.log("hola? 2")
+        fetch(this.store.url+"/listedProducts", {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+        },
+         body: JSON.stringify({IdList: this.prodsFavoritos.id, IdProduct: items.producto.id})
+            }).then(res => res.json())
+              .then(res => this.productosFavoritos.push(res))
+      }else{
+        let lp = await this.store.isProductOnList(this.prodsFavoritos.id, items.producto.id)
+        fetch(this.store.url+"/listedProducts/"+lp.id, {
+              method: 'DELETE',
+        }
+        // this.productosFav = this.productosFav.filter(function (val) {
+        // return val != items.producto;
+      // }
+      );
+      }
+      this.cargarProdsFav()
     }
     ,
-    filterLists() {
-      
-      this.productosFav = this.filtrarLista(this.productosFav)
-      this.ofertas = this.filtrarLista(this.ofertas)
-      this.stockGeneral = this.filtrarLista(this.stockGeneral)
+    async filterLists() {
+      // this.productosFav = this.filtrarLista(this.productosFav)
+      // this.ofertas = this.filtrarLista(this.ofertas)
+      // this.stockGeneral = this.filtrarLista(this.stockGeneral)
+       this.Stock = await this.filtrarLista()
+
       
       
     },
-  filtrarLista(lista){
-    lista = lista.filter((prod) => {
-      let prodConcatenado = `${prod.name}${prod.brand}${prod.content}${prod.category}${prod.discount}`
-      console.log(prodConcatenado)
-      return prodConcatenado.toLowerCase().includes(this.filtro.toLowerCase())
-                });
-    return lista
+  async filtrarLista(){
+ 
+    let listaFiltrada = await fetch(this.store.url + "products?filter="+this.filtro)
+    listaFiltrada = await listaFiltrada.json()
+    return listaFiltrada
   }
-}}
+}
+}
 </script>
 
 

@@ -2,7 +2,7 @@
   <div class="container">
     <div class="d-flex"></div>
 
-    <div class="card text-center" style="width: 25rem">
+    <div class="card text-center" style="width: 20rem">
       <div class="card-body card-shadow">
         <div @click="changeFav" class="text-end">
           <img
@@ -16,6 +16,7 @@
             src="../assets/heart-empty.png"
           />
         </div>
+        <img :src="product.img" class="img" />
         <h4 class="card-title">{{ product.name }} - {{ product.brand }}</h4>
         <div class="row">
           <h5 class="">Precio: ${{ product.price }}</h5>
@@ -32,14 +33,14 @@
         </div>
         <div class="row justify-content-center">
           <button
-            class="boton col-1 p-1 my-1 h4"
+            class="boton col-1 p-1 my-1 h5"
             v-on:click="disminuirCantidad()"
           >
             -
           </button>
           <h5 class="col-4 mt-3 w-25">{{ amount }}</h5>
           <button
-            class="boton col-1 p-1 my-1 h4"
+            class="boton col-1 px-0 my-1 h5"
             v-on:click="aumentarCantidad()"
           >
             +
@@ -104,6 +105,7 @@ export default {
         }
       },
       agregarProducto(){
+        console.log("Agregar on Prod")
         this.$emit('agregado', {producto: this.product
         , amount: this.amount})
          this.amount = 0;
@@ -129,6 +131,10 @@ export default {
 </script>
 
 <style>
+.img {
+  width: 50%;
+  height: 50%;
+}
 .boton {
   display: inline-block;
   font-weight: 400;
