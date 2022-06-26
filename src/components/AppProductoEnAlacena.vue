@@ -1,7 +1,5 @@
 <template>
   <div class="container">
-    <div class="d-flex"></div>
-
     <div class="card text-center" style="width: 25rem">
       <div class="card-body card-shadow">
         <h4 class="card-title">{{ product.name }} - {{ product.brand }}</h4>
@@ -15,7 +13,7 @@
           >
             -
           </button>
-          <h5 class="col-1 mt-3 mx-1">{{ amount }}</h5>
+          <h5 class="col-2 mt-3 mx-1">{{ amount }}</h5>
         </div>
       </div>
     </div>

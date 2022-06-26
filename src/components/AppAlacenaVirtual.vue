@@ -45,8 +45,8 @@
         </svg>
       </button>
     </div> -->
-    <div class="m-3">
-      <div class="col-sm-4 mt-4" v-for="product in alacena" :key="product.id">
+    <div class="row m-3">
+      <div class="col-sm-4 mx-3" v-for="product in alacena" :key="product.id">
         <AppProductoEnAlacena
           @borrarDeAlacena="borrarProducto"
           :product="product"

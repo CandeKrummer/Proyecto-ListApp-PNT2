@@ -32,9 +32,9 @@ export default {
     const store = useStore();
     return { store };
   },
-  created() {
+  async created() {
     this.listaDeCompras = this.store.listaDeCompras;
-    this.store.cambiarListaEnUso(this.listaDeCompras)
+    this.store.cambiarListaEnUso(this.listaDeCompras.id);
   },
 };
 </script>

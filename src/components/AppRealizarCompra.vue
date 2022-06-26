@@ -3,7 +3,7 @@
     <div class="display justify-content-center">
       <div class="p-3 mb-4">
         <div class="col text-center" @click="guardarProductosEnAlacena()">
-          <router-link to="/alacena-virtual" class="mx-3 btn btn-success"
+          <router-link to="/lista-de-compras" class="mx-3 btn btn-success"
             >Confirmar</router-link
           >
         </div>
