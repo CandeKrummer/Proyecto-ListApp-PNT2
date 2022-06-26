@@ -105,6 +105,7 @@ export default {
         }
       },
       agregarProducto(){
+        console.log("Agregar on Prod")
         this.$emit('agregado', {producto: this.product
         , amount: this.amount})
          this.amount = 0;

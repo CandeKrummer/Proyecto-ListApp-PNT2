@@ -48,7 +48,7 @@ const routes = [
         component: AppAgregarProductos,
     },
     {
-        path: '/realizar-compra"',
+        path: '/realizar-compra',
         name: 'realizarCompra',
         component: AppRealizarCompra,
     },
@@ -66,11 +66,6 @@ const routes = [
         path: '/historial',
         name: 'historial',
         component: AppHistorial,
-    },
-    {
-        path: "/lista/:lista",
-        name: "lista",
-        component: AppLista,
     },
 ]
 

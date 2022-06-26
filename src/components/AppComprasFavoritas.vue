@@ -140,70 +140,6 @@ export default {
             ShoppingListName: "Crear nueva compra",
             products:[],
           }, 
-          // {      
-          //   id: 1,
-          //   shoppingListName: "Compra mes",
-          //       // fechaCreacion:"01/01/01",  
-          //   products:[{
-          //       id: 6,
-          //       name: "Aceite 1,5Lt",
-          //       brand:"Marolio",
-          //       category:"Alacena",
-          //       discount: 10,
-          //       amount: 2,
-          //       price: 200,
-          //      },
-          //      {
-          //       id: 9,
-          //       name: "Aceite 1 Lt",
-          //       brand:"Marolio",
-          //       category:"Alacena",
-          //       discount: 20,
-          //       amount: 2,
-          //       price: 150,
-          //      },
-          //       {
-          //       id: 10,
-          //       name: "Puré de tomate 520Gr",
-          //       brand:"Día",
-          //       category:"Alacena",
-          //       discount: 15,
-          //       amount: 2,
-          //       price: 59,
-          //       }],
-          // },
-          // {
-          //   id: 2,
-          //   shoppingListName: "Compra semana",
-          //       // fechaCreacion:"01/01/01",  
-          //    products:[{
-          //           id: 24,
-          //           name: "Acelga congelada 500gr",
-          //           brand:"Granja del sol",
-          //           category:"Congelados",
-          //           discount: 10,
-          //           amount: 3,
-          //           price: 200,
-          //       },
-          //       {
-          //           id: 25,
-          //           name: "Yerba 1Kg",
-          //           brand:"Dos rosas",
-          //           category:"Alacena",
-          //           discount: 20,
-          //           amount: 3,
-          //           price: 400,
-          //       },
-          //           {
-          //           id: 26,
-          //           name: "Halls menta x6",
-          //           brand:"Halls",
-          //           category:"Alacena",
-          //           discount: 15,
-          //           amount: 2,
-          //           price: 70,
-          //       }]
-          //   }
           ],
            
         };
@@ -221,6 +157,8 @@ export default {
   methods:{
     detallarLista(listaAct){
     this.idListaADetallar = this.listasFav.indexOf(listaAct)
+    this.store.cambiarListaEnUso(listaAct.id)
+
    },
     crearNuevaLista(){
       if(this.nombreNuevaLista != ''){
@@ -287,7 +225,7 @@ export default {
       
     },
     cambiarListaEnUso(){
-       this.store.cambiarListaEnUso(this.listaADetallar.id)
+      console.log("BORRAR: "+this.listaADetallar.id)
     },
     agregarALista(){
       this.store.cambiarListaEnUso(this.store.listaDeCompras)

@@ -30,15 +30,17 @@ export default {
   },
   data() {
     return {
-      amount: 0,
+      amount: this.product.amount,
     };
   },
   methods: {
     disminuirCantidad() {
       if (this.amount > 1) {
+        console.log("restar");
         this.amount--;
       } else if (this.amount <= 1) {
         this.amount = 0;
+        console.log("borrar");
         this.$emit("borrarDeAlacena", { producto: this.product });
       }
     },

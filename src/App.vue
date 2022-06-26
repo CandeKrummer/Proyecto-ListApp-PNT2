@@ -61,6 +61,7 @@ export default {
   },
   created() {
     if (this.store.validarUsuario("a@a.com", "admin")) {
+      this.store.cargarListedProducts();
       this.store.cargarLista();
       this.store.cargarAlacenaVirtual();
     }
