@@ -105,7 +105,7 @@ export const useStore = defineStore('pruebaContador', {
             this._listaDeCompras.shoppingListName = listaCompras.ShoppingListName;
             this._listaDeCompras.id = listaCompras.id;
             //busco los listed products de esa lista de compras
-            let listedProductsListaDeCompras = this._listedProductoPrueba.filter(lp => lp.IdList == listaCompras.id);
+            let listedProductsListaDeCompras = this._listedProducts.filter(lp => lp.IdList == listaCompras.id);
             //agrego cada producto junto con su cantidad en la lista de compras
             for (let i = 0; i < listedProductsListaDeCompras.length; i++) {
                 const responseProduct = await fetch(this._url + "products/" + listedProductsListaDeCompras[i].IdProduct);
@@ -125,7 +125,7 @@ export const useStore = defineStore('pruebaContador', {
             //guardo el id de la alacena
             this._idAlacenaVirtual = listaAlacena.id
             //busco los listed products de esa alacena
-            let listedProductsAlacena = this._listedProductoPrueba.filter(lp => lp.IdList == this._idAlacenaVirtual)
+            let listedProductsAlacena = this._listedProducts.filter(lp => lp.IdList == this._idAlacenaVirtual)
             //agrego cada producto junto con su cantidad en la alacena
             for (let i = 0; i < listedProductsAlacena.length; i++) {
                 const responseProduct = await fetch(this._url + "products/" + listedProductsAlacena[i].IdProduct);
@@ -134,26 +134,30 @@ export const useStore = defineStore('pruebaContador', {
                 this._alacenaVirtual.push(product)
             }
         },
-        moverProductosAlacena() {
+        async moverProductosAlacena() {
             //busco los listed products de la lista de compras
-            let listedProductsLista = this._listedProductoPrueba.filter(lp => lp.IdList == this._listaDeCompras.id)
+            let listedProductsLista = this._listedProducts.filter(lp => lp.IdList == this._listaDeCompras.id)
             //por cada lp en la lista, me fijo si está en la alacena y lo agrego
             for (let i = 0; i < listedProductsLista.length; i++) {
-                let lp = this._listedProductoPrueba.find(lp => lp.IdProduct === listedProductsLista[i].IdProduct && lp.IdList == this._idAlacenaVirtual)
+                let lp = this._listedProducts.find(lp => lp.IdProduct === listedProductsLista[i].IdProduct && lp.IdList == this._idAlacenaVirtual)
                 if (lp == undefined) {
                     listedProductsLista[i].IdList = this._idAlacenaVirtual
-                    this._listedProductoPrueba.push(listedProductsLista[i])
+                    this._listedProducts.push(listedProductsLista[i])
                 } else {
                     console.log("Aumento en alacena")
                     lp.amount += listedProductsLista[i].amount
                 }
                 // y borro los listed products de la lista de compras
-                this._listedProductoPrueba = this._listedProductoPrueba.filter(function (val) {
-                    return val.IdList != this._listaDeCompras.id && val.IdProduct != listedProductsLista[i].pr;
+                this._listedProducts = this._listedProducts.filter(function (val) {
+                    console.log("borrar lp")
+                    return val.id != listedProductsLista[i].id;
                 });
             }
             //borro los productos de la lista de compras
             this._listaDeCompras.products = [];
+            //llamo a cargar la alacena devuelta
+            this._alacenaVirtual = [];
+            await this.cargarAlacenaVirtual();
 
         },
         addProduct(product, amount) {
