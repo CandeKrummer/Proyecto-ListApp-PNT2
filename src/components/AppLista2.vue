@@ -105,18 +105,15 @@ export default {
   methods: {
     sumarProducto(producto) {
       producto.amount++;
-      this.store.actualizarCantListaDeCompras(producto);
     },
     restarProducto(producto) {
       producto.amount--;
       if (producto.amount <= 0) {
-        this.sacarProducto(producto);
+        this.listaProductos = this.remove(this.listaProductos, producto);
       }
-      this.store.actualizarCantListaDeCompras(producto);
     },
     sacarProducto(producto) {
       this.listaProductos = this.remove(this.listaProductos, producto);
-      this.store.sacarListaDeCompras(producto);
     },
     remove(lista, producto) {
       let listaRemovida = lista.filter(function (val) {

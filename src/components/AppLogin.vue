@@ -66,7 +66,7 @@ export default {
       mail: null,
       password: null,
       logeado: false,
-      incorrecto: false
+      incorrecto: false,
     };
   },
   setup() {
@@ -77,16 +77,14 @@ export default {
     validarLogin() {
       if (this.store.validarUsuario(this.mail, this.password)) {
         this.logeado = true;
-        console.log("Es admin: "+this.store.isAdmin)
-        if(!this.store.isAdmin){
-           this.store.cargarListedProducts();
-           this.store.cargarLista();
-           this.store.cargarAlacenaVirtual();
+        console.log("Es admin: " + this.store.isAdmin);
+        if (!this.store.isAdmin) {
+          this.store.inicio();
         }
-        this.$router.push({ path: '/' })
-      }else{
-          this.incorrecto = true
-        }
+        this.$router.push({ path: "/" });
+      } else {
+        this.incorrecto = true;
+      }
     },
   },
 };

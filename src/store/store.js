@@ -95,7 +95,7 @@ export const useStore = defineStore('pruebaContador', {
             this._listaDeCompras.shoppingListName = listaCompras.ShoppingListName;
             this._listaDeCompras.id = listaCompras.id;
             //busco los listed products de esa lista de compras
-            let listedProductsListaDeCompras = this._listedProductoPrueba.filter(lp => lp.IdList == listaCompras.id);
+            let listedProductsListaDeCompras = this._listedProducts.filter(lp => lp.IdList == listaCompras.id);
             //agrego cada producto junto con su cantidad en la lista de compras
             for (let i = 0; i < listedProductsListaDeCompras.length; i++) {
                 let product = this._stock.find(p => p.id == listedProductsListaDeCompras[i].IdProduct);
@@ -116,7 +116,7 @@ export const useStore = defineStore('pruebaContador', {
             //guardo el id de la alacena
             this._idAlacenaVirtual = listaAlacena.id
             //busco los listed products de esa alacena
-            let listedProductsAlacena = this._listedProductoPrueba.filter(lp => lp.IdList == this._idAlacenaVirtual)
+            let listedProductsAlacena = this._listedProducts.filter(lp => lp.IdList == this._idAlacenaVirtual)
             //agrego cada producto junto con su cantidad en la alacena
             for (let i = 0; i < listedProductsAlacena.length; i++) {
                 let product = this._stock.find(p => p.id == listedProductsAlacena[i].IdProduct);
