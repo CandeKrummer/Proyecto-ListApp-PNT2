@@ -1,11 +1,12 @@
 <template>
   <div>
     <div class="display justify-content-center">
-      <div class="p-3 mb-4">
-        <div class="col text-center" @click="guardarProductosEnAlacena()">
-          <router-link to="/lista-de-compras" class="mx-3 btn btn-success"
-            >Confirmar</router-link
-          >
+      <div v-if="compraRealizada == false" class="p-3 mb-4">
+        <div
+          class="col text-center mx-3 btn btn-success"
+          @click="guardarProductosEnAlacena()"
+        >
+          Confirmar
         </div>
         <h5 class="col mt-3 mx-1">Precio total: $ {{ precioTotal() }}</h5>
         <h5 class="col mt-3 mx-1">
@@ -27,6 +28,11 @@
           </div>
         </div>
       </div>
+      <div v-if="compraRealizada == true" class="p-3 mb-4">
+        <h5 class="col mt-3 mx-1">
+          Los productos se agregaron a la Alacena Virtual exitosamente
+        </h5>
+      </div>
     </div>
   </div>
 </template>
@@ -37,6 +43,7 @@ import { useStore } from "../store/store.js";
 export default {
   data() {
     return {
+      compraRealizada: false,
       productos: [],
     };
   },
@@ -45,6 +52,7 @@ export default {
     return { store };
   },
   created() {
+    this.compraRealizada = false;
     this.productos = this.store.listaDeCompras.products;
   },
   methods: {
@@ -56,6 +64,7 @@ export default {
       return precio.toFixed([2]);
     },
     guardarProductosEnAlacena() {
+      this.compraRealizada = true;
       this.store.moverProductosAlacena();
     },
   },
