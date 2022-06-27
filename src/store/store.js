@@ -66,6 +66,14 @@ export const useStore = defineStore('pruebaContador', {
 
             return this._userValid;
         },
+        reset() {
+            this._listaDeCompras = {
+                id: 0,
+                shoppingListName: "",
+                products: []
+            }
+            this._alacenaVirtual = []
+        },
         async inicio() {
             await this.cargarStock();
             await this.cargarListedProducts();

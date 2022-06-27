@@ -79,6 +79,7 @@ export default {
         this.logeado = true;
         console.log("Es admin: " + this.store.isAdmin);
         if (!this.store.isAdmin) {
+          this.store.reset();
           this.store.inicio();
         }
         this.$router.push({ path: "/" });
