@@ -36,10 +36,6 @@
         </router-link>
 
         <div class="d-flex">
-          <router-link to="/config" class="navbar-brand"
-            ><img src="./assets/engranaje.png" width="30"
-          /></router-link>
-
           <router-link to="/login" class="navbar-brand"
             ><img src="./assets/user.png" width="30"
           /></router-link>

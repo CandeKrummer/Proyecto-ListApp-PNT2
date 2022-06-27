@@ -39,11 +39,96 @@ export const useStore = defineStore('pruebaContador', {
             familyId: 2,
         },
         {
-            name: "Juana",
-            mail: 'juana@a.com',
-            password: 'branch',
+            name: "Hettie",
+            email: "Humberto89@hotmail.com",
+            password: "_A73UBAIS_A4Xq7",
             familyId: 2,
+            id: "4"
         },
+        {
+            name: "Abelardo",
+            email: "Houston_Jacobs31@hotmail.com",
+            password: "DabNk7cvFJhZbTJ",
+            familyId: 2,
+            id: "5"
+        },
+        {
+            name: "Desmond",
+            email: "Marquise.Reinger5@yahoo.com",
+            password: "rauG1_ksFvBHINd",
+            familyId: 3,
+            id: "6"
+        },
+        {
+            name: "Leonora",
+            email: "Stella15@yahoo.com",
+            password: "IwiT2xpr8UXF6V1",
+            familyId: 3,
+            id: "7"
+        },
+        {
+            name: "Nicklaus",
+            email: "Martin59@gmail.com",
+            password: "7bPrehx5y7OAcqt",
+            familyId: 4,
+            id: "8"
+        },
+        {
+            name: "Carissa",
+            email: "Kristian_Stark@hotmail.com",
+            password: "_8lu1mDAKt7jA5S",
+            familyId: 4,
+            id: "9"
+        },
+        {
+            name: "Santina",
+            email: "Shaylee.Davis@yahoo.com",
+            password: "I1qRIrU1Z8xvhjk",
+            familyId: 5,
+            id: "10"
+        },
+        {
+            name: "Major",
+            email: "Barbara.Sporer@gmail.com",
+            password: "NHmzj0HlwOmIGeb",
+            familyId: 5,
+            id: "11"
+        },
+        {
+            name: "Dianna",
+            email: "Cynthia82@hotmail.com",
+            password: "EulpYDrpU3Wd_VU",
+            familyId: 6,
+            id: "12"
+        },
+        {
+            name: "Zita",
+            email: "Ana58@gmail.com",
+            password: "zdzD3MZXERmqlfq",
+            familyId: 7,
+            id: "13"
+        },
+        {
+            name: "Dorothy",
+            email: "Antonina.Emmerich75@hotmail.com",
+            password: "zc8Kjklb5bYf3rf",
+            familyId: 8,
+            id: "14"
+        },
+        {
+            name: "Cary",
+            email: "Lavina98@yahoo.com",
+            password: "jMfV4PWKqVbhut1",
+            familyId: 9,
+            id: "15"
+        },
+        {
+            name: "Marlee",
+            email: "Una_Bayer@yahoo.com",
+            password: "PsYXxp8f2bItLy7",
+            familyId: 10,
+            id: "16"
+        }
         ],
         _userValid: false,
         _isAdmin: false,

@@ -27,132 +27,98 @@
 <script>
 import AppListaMinimizada from "@/components/AppListaMinimizada.vue";
 export default {
-     components: {
-         AppListaMinimizada,
-     },
-    data(){
-        return{
-            listasPasadas:[{
-                shoppingListName: "Compra 05/04",
-                products: [
-                    {
-                        id: 1,
-                        name: "Pepitos",
-                        brand: "Pepitos",
-                        price: 240.65,
-                        content: "400 gr",
-                        category: "Alacena",
-                        amount: 4
-                    },
-                    {
-                        id: 2,
-                        name: "Chocolinas",
-                        brand: "Chocolinas",
-                        price: 200.50,
-                        content: "450 gr",
-                        category: "Alacena",
-                        amount: 2
-                    },
-                    {
-                        id: 3,
-                        name: "Sopa Quick Zapallo x5",
-                        brand: "Quick",
-                        price: 250.65,
-                        content: "5 Sobres",
-                        category: "Alacena",
-                        amount: 2
-                    },
-                    {
-                        id: 4,
-                        name: "Sopa Quick Tomate x5",
-                        brand: "Quick",
-                        price: 250.65,
-                        content: "5 Sobres",
-                        category: "Alacena",
-                        amount: 2
-                    },
-                    {
-                        id: 5,
-                        name: "Sopa Quick Choclo x5",
-                        brand: "Quick",
-                        price: 250.65,
-                        content: "5 Sobres",
-                        category: "Alacena",
-                        amount: 2
-                    },
-                    {
-                        id: 6,
-                        name: "Sopa Quick Vegetales x5",
-                        brand: "Quick",
-                        price: 250.65,
-                        content: "5 Sobres",
-                        category: "Alacena",
-                        amount: 1
-                    },
-                    {
-                        id: 7,
-                        name: "Sopa Quick Tomate x5",
-                        brand: "Quick",
-                        price: 250.65,
-                        content: "5 Sobres",
-                        category: "Alacena",
-                        amount: 2
-                    },
-                    {
-                        id: 8,
-                        name: "Sopa Quick Choclo x5",
-                        brand: "Quick",
-                        price: 250.65,
-                        content: "5 Sobres",
-                        category: "Alacena",
-                        amount: 2
-                    },
-                    {
-                        id: 9,
-                        name: "Sopa Quick Vegetales x5",
-                        brand: "Quick",
-                        price: 250.65,
-                        content: "5 Sobres",
-                        category: "Alacena",
-                        amount: 1
-                    },
-                    {
-                           id: 10,
-                        name: "Sopa Quick Vegetales x5",
-                        brand: "Quick",
-                        price: 250.65,
-                        content: "5 Sobres",
-                        category: "Alacena",
-                        amount: 1
-                    },
-                    
-                    ]
+  components: {
+    AppListaMinimizada,
+  },
+  data() {
+    return {
+      listasPasadas: [
+        {
+          shoppingListName: "Compra 05/04",
+          products: [
+            {
+              id: 1,
+              name: "Pepitos",
+              brand: "Pepitos",
+              price: 240.65,
+              content: "400 gr",
+              category: "Alacena",
+              amount: 4,
             },
             {
-                shoppingListName: "Compra 09/04",
-                products: [
-                    {
-                        id: 1,
-                        name: "Aceite",
-                        brand: "Marolio",
-                        price: 240.65,
-                        content: "400 gr",
-                        category: "Alacena",
-                        amount: 4
-                    },
-                    {
-                        id: 2,
-                        name: "Acelga",
-                        brand: "Día",
-                        price: 200.50,
-                        content: "450 gr",
-                        category: "Alacena",
-                        amount: 2
-                    }]
-            }] 
-        }
-    }    
-}
+              id: 2,
+              name: "Chocolinas",
+              brand: "Chocolinas",
+              price: 200.5,
+              content: "450 gr",
+              category: "Alacena",
+              amount: 2,
+            },
+            {
+              id: 3,
+              name: "Sopa Quick Zapallo x5",
+              brand: "Quick",
+              price: 250.65,
+              content: "5 Sobres",
+              category: "Alacena",
+              amount: 2,
+            },
+            {
+              id: 4,
+              name: "Sopa Quick Tomate x5",
+              brand: "Quick",
+              price: 250.65,
+              content: "5 Sobres",
+              category: "Alacena",
+              amount: 2,
+            },
+            {
+              id: 5,
+              name: "Sopa Quick Choclo x5",
+              brand: "Quick",
+              price: 250.65,
+              content: "5 Sobres",
+              category: "Alacena",
+              amount: 2,
+            },
+            {
+              id: 6,
+              name: "Sopa Quick Vegetales x5",
+              brand: "Quick",
+              price: 250.65,
+              content: "5 Sobres",
+              category: "Alacena",
+              amount: 1,
+            },
+          ],
+        },
+        {
+          shoppingListName: "Compra 09/04",
+          products: [
+            {
+              id: 1,
+              name: "Aceite",
+              brand: "Marolio",
+              price: 240.65,
+              content: "400 gr",
+              category: "Alacena",
+              amount: 4,
+            },
+            {
+              id: 2,
+              name: "Acelga",
+              brand: "Día",
+              price: 200.5,
+              content: "450 gr",
+              category: "Alacena",
+              amount: 2,
+            },
+          ],
+        },
+      ],
+    };
+  },
+};
 </script>
 
 <style>

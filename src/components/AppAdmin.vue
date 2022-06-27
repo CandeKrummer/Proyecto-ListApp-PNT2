@@ -50,100 +50,97 @@ export default {
     AppCardAdmin,
   },
   setup() {
-      const store = useStore();
-      return { store };
-    },
-    data(){
-      return{
-        families:0,
-        lists:0,
-        listasFavs:0,
-        valores: [],
-        products:[],
-        lps:[],
-        
-      }
-    },
-  computed:{
-    cantUsers(){
-      return this.store.cantUsers
-    },
-     gastoTotal(){
-      let total = 0
-      let prod
-      let lps = this.lps
-      lps.forEach(lp => {
-        prod = this.products.find(p => p.id == lp.IdProduct)
-        total += prod.price * lp.amount
-      });
-      
-     return total
-    }
-    
+    const store = useStore();
+    return { store };
   },
-  methods:{
-    async calcularFamilias(){
+  data() {
+    return {
+      families: 0,
+      lists: 0,
+      listasFavs: 0,
+      valores: [],
+      products: [],
+      lps: [],
+    };
+  },
+  computed: {
+    cantUsers() {
+      return this.store.cantUsers;
+    },
+    gastoTotal() {
+      let total = 0;
+      let prod;
+      let lps = this.lps;
+      lps.forEach((lp) => {
+        prod = this.products.find((p) => p.id == lp.IdProduct);
+        total += prod.price * lp.amount;
+      });
+
+      return total;
+    },
+  },
+  methods: {
+    async calcularFamilias() {
       const response = await fetch(this.store.url + "/family");
       const results = await response.json();
       this.valores.push({
         titulo: "Familias registradas",
-        valor: results.length  + ' Familias'
-      })
-      this.families = results.length
+        valor: results.length + " Familias",
+      });
+      this.families = results.length;
     },
-    async calcularListas(){
+    async calcularListas() {
       const response = await fetch(this.store.url + "/shoppingList");
       const results = await response.json();
-      this.lists = results.length
-      this.listasFavs = results.filter(list => list.category == "Compra favorita").length
+      this.lists = results.length;
+      this.listasFavs = results.filter(
+        (list) => list.category == "Compra favorita"
+      ).length;
     },
-    async calcularProductos(){
+    async calcularProductos() {
       const response = await fetch(this.store.url + "/products");
       const results = await response.json();
-      this.products = results
+      this.products = results;
       this.valores.push({
         titulo: "Productos en Stock general",
-        valor: results.length + ' Prods'
-      })
-      
-      
+        valor: results.length + " Prods",
+      });
     },
-    async getLPs(){
+    async getLPs() {
       const response = await fetch(this.store.url + "/listedProducts");
       const results = await response.json();
-      this.lps = results
+      this.lps = results;
       this.valores.push({
         titulo: "Productos añadidos a listas",
-        valor: results.length+' Prods'
-      })
+        valor: results.length + " Prods",
+      });
     },
-    cargarGastos(){
+    cargarGastos() {
       this.valores.push({
         titulo: "Gasto promedio por familia",
-        valor: '$'+(this.gastoTotal * this.families).toFixed([2])
-      })
+        valor: "$" + (this.gastoTotal / this.families).toFixed([2]),
+      });
       this.valores.push({
-        titulo: "Gasto total entre las familia",
-        valor: '$'+this.gastoTotal.toFixed([2])
-      })
+        titulo: "Gasto total entre las familias",
+        valor: "$" + this.gastoTotal.toFixed([2]),
+      });
     },
-    cargarUsers(){
+    cargarUsers() {
       this.valores.push({
         titulo: "Usuarios registrados",
-        valor: this.cantUsers + ' users'
-      })
-    }
+        valor: this.cantUsers + " users",
+      });
+    },
   },
-  async created(){
-    await this.calcularFamilias()
-    await this.calcularListas()
-    await this.calcularProductos()
-    await this.getLPs()
-    this.cargarGastos()
-    this.cargarUsers()
-
-  }
-}
+  async created() {
+    await this.calcularFamilias();
+    await this.calcularListas();
+    await this.calcularProductos();
+    await this.getLPs();
+    this.cargarGastos();
+    this.cargarUsers();
+  },
+};
 </script>
 
 <style>
