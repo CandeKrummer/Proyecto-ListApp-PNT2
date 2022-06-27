@@ -68,7 +68,14 @@ export const useStore = defineStore('pruebaContador', {
 
             return this._userValid;
         },
-
+        reset() {
+            this._listaDeCompras = {
+                id: 0,
+                shoppingListName: "",
+                products: []
+            }
+            this._alacenaVirtual = []
+        },
         async inicio() {
             await this.cargarStock();
             await this.cargarListedProducts();
@@ -149,29 +156,62 @@ export const useStore = defineStore('pruebaContador', {
         },
         moverProductosAlacena() {
             //busco los listed products de la lista de compras
-            let listedProductsLista = this._listedProductoPrueba.filter(lp => lp.IdList == this._listaDeCompras.id)
+            let listedProductsLista = this._listedProducts.filter(lp => lp.IdList == this._listaDeCompras.id)
+            console.log(listedProductsLista)
             //por cada lp en la lista, me fijo si está en la alacena y lo agrego
             for (let i = 0; i < listedProductsLista.length; i++) {
-                let lp = this._listedProductoPrueba.find(lp => lp.IdProduct === listedProductsLista[i].IdProduct && lp.IdList == this._idAlacenaVirtual)
+                let lp = this._listedProducts.find(lp => lp.IdProduct == listedProductsLista[i].IdProduct && lp.IdList == this._idAlacenaVirtual)
+                console.log(lp)
                 if (lp == undefined) {
-                    listedProductsLista[i].IdList = this._idAlacenaVirtual
-                    this._listedProductoPrueba.push(listedProductsLista[i])
+                    this._alacenaVirtual.push(this._listaDeCompras.products.find(prod => prod.id == listedProductsLista[i].IdProduct))
+                    fetch(this._url + "/listedProducts", {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json, text/plain, */*',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ IdList: this._idAlacenaVirtual, IdProduct: listedProductsLista[i].IdProduct, amount: listedProductsLista[i].amount })
+                    }).then(res => {
+                        res.json()
+                        this._listedProducts.push(res)
+                    }).then(res => console.log(res))
+                    /* listedProductsLista[i].IdList = this._idAlacenaVirtual
+                    this._listedProducts.push(listedProductsLista[i]) */
                 } else {
                     console.log("Aumento en alacena")
                     lp.amount += listedProductsLista[i].amount
+                    this._alacenaVirtual.find(prod => prod.id == lp.IdProduct).amount = lp.amount
+                    fetch(this._url + "/listedProducts/" + lp.id, {
+                        method: 'PUT',
+                        headers: {
+                            'Accept': 'application/json, text/plain, */*',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ amount: lp.amount })
+                    }).then(res => res.json())
+                        .then(res => console.log(res))
                 }
                 // y borro los listed products de la lista de compras
-                this._listedProductoPrueba = this._listedProductoPrueba.filter(function (val) {
-                    return val.IdList != this._listaDeCompras.id && val.IdProduct != listedProductsLista[i].pr;
+                this._listedProducts = this._listedProducts.filter(function (val) {
+                    console.log("borrar lp")
+                    return val.id != listedProductsLista[i].id;
                 });
+                //Hacer el delete
             }
             //borro los productos de la lista de compras
             this._listaDeCompras.products = [];
+            //llamo a cargar la alacena devuelta
+            /* this._alacenaVirtual = [];
+            this.cargarAlacenaVirtual(); */
 
         },
         async addProduct(product, amount) {
             let lp = await this.isProductOnList(this._idListaEnUso, product.id)
             if (lp == undefined) {
+                if (this._idListaEnUso == this._listaDeCompras.id) {
+                    product.amount = amount
+                    this._listaDeCompras.products.push(product)
+                }
                 fetch(this._url + "/listedProducts", {
                     method: 'POST',
                     headers: {
@@ -183,6 +223,10 @@ export const useStore = defineStore('pruebaContador', {
                     .then(res => console.log(res))
             } else {
                 let cantidad = lp.amount + amount
+                if (this._idListaEnUso == this._listaDeCompras.id) {
+                    let prod = this._listaDeCompras.products.find(p => p.id == product.id)
+                    prod.amount = cantidad
+                }
                 fetch(this._url + "/listedProducts/" + lp.id, {
                     method: 'PUT',
                     headers: {
@@ -251,11 +295,23 @@ export const useStore = defineStore('pruebaContador', {
             })
             await this.sacarListedProduct(lp)
         },
-        async restarAlacena(amount) {
-            console.log("restarAlacena" + amount)
+        async restarAlacena(producto) {
+            let prod = this._alacenaVirtual.find(p => p.id == producto.id)
+            prod.amount = producto.amount
+            console.log("cant product: " + prod.amount)
+            let lp = this._listedProducts.find(lp => lp.IdList == this._idAlacenaVirtual && lp.IdProduct == producto.id)
+            lp.amount = producto.amount
+            await this.modificarCantListedProduct(lp)
         },
         async sacarAlacena(producto) {
-            console.log("sacarAlacena" + producto)
+            this._alacenaVirtual = this._alacenaVirtual.filter(function (val) {
+                return val != producto;
+            })
+            let lp = this._listedProducts.find(lp => lp.IdList == this._idAlacenaVirtual && lp.IdProduct == producto.id)
+            this._listedProducts = this._listedProducts.filter(function (val) {
+                return val != lp;
+            })
+            await this.sacarListedProduct(lp)
         },
         async modificarCantListedProduct(lp) {
             fetch(this._url + "/listedProducts/" + lp.id, {
@@ -288,14 +344,7 @@ export const useStore = defineStore('pruebaContador', {
             this._isAdmin = false
             this._userValid = false
             this._userName = ''
-            this._listaDeCompras = {
-                id: 0,
-                shoppingListName: "",
-                products: []
-            },
-                this._alacenaVirtual = []
-            this._stock = []
-            this._listedProducts = []
+            this.reset()
         },
     },
     getters: {
@@ -331,6 +380,9 @@ export const useStore = defineStore('pruebaContador', {
         },
         userName() {
             return this._userName
+        },
+        prodsEnStock() {
+            return this._stock.length
         }
     },
 })

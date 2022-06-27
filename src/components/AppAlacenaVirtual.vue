@@ -77,12 +77,14 @@ export default {
     this.alacena = this.store.alacenaVirtual;
   },
   methods: {
-    restarProducto(producto, amount) {
-      this.store.restarAlacena(amount);
-      console.log(producto + amount);
+    restarProducto(producto) {
+      this.store.restarAlacena(producto);
     },
-    borrarProducto(producto, amount) {
-      console.log(producto + amount);
+    borrarProducto(producto) {
+      this.alacena = this.alacena.filter(function (val) {
+        return val != producto;
+      });
+      this.store.sacarAlacena(producto);
     },
   },
 };

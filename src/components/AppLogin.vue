@@ -86,6 +86,7 @@ export default {
       if (this.store.validarUsuario(this.mail, this.password)) {
         this.logged = true;
         if (!this.store.isAdmin) {
+          this.store.reset();
           this.store.inicio();
         }
         this.$router.push({ path: "/" });

@@ -3,7 +3,7 @@
     <div class="d-flex"></div>
 
     <div class="card text-center" style="width: 20rem">
-      <div class="card-body card-shadow">
+      <div class="card-body card-shadow" style="height: 510px">
         <div @click="changeFav" class="text-end">
           <img
             v-if="esFavorito"
@@ -75,65 +75,66 @@
 
 <script>
 export default {
-    name:"AppProducto",
-    props: {
-      product: Object,
-      hasDiscount: {
-        type: Boolean,
-        default: false,
-      },
-      isFav: {
-        type: Boolean,
-        default: false,
-      }
-   },
-    data() {
-        return {
-          amount: 1,
-          esFavorito: false,
-          fav: "../assets/heart-full.png",
-          notFav: "../assets/heart-empty.png",
-        };
+  name: "AppProducto",
+  props: {
+    product: Object,
+    hasDiscount: {
+      type: Boolean,
+      default: false,
     },
-    methods: {
-      aumentarCantidad(){
-        this.amount ++;
-      },
-      disminuirCantidad(){
-        if(this.amount > 0){
-          this.amount --;
-        }
-      },
-      agregarProducto(){
-        console.log("Agregar on Prod")
-        this.$emit('agregado', {producto: this.product
-        , amount: this.amount})
-         this.amount = 0;
-      },
-      changeFav(){
-        this.esFavorito = !this.esFavorito;
-        this.$emit('clickCorazon', {producto: this.product
-        , esFavorito: this.esFavorito})
+    isFav: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  data() {
+    return {
+      amount: 1,
+      esFavorito: false,
+      fav: "../assets/heart-full.png",
+      notFav: "../assets/heart-empty.png",
+    };
+  },
+  methods: {
+    aumentarCantidad() {
+      this.amount++;
+    },
+    disminuirCantidad() {
+      if (this.amount > 0) {
+        this.amount--;
       }
     },
-    computed:{
-      subtotal: function(){
-        return (this.amount * this.product.price).toFixed([2]);
-      },
-      ahorro: function(){
-        return (this.subtotal * (this.product.discount / 100)).toFixed([2])
-      }
+    agregarProducto() {
+      console.log("Agregar on Prod");
+      this.$emit("agregado", { producto: this.product, amount: this.amount });
+      this.amount = 1;
     },
-    created(){
-      this.esFavorito = this.isFav;
-    }
-}
+    changeFav() {
+      this.esFavorito = !this.esFavorito;
+      this.$emit("clickCorazon", {
+        producto: this.product,
+        esFavorito: this.esFavorito,
+      });
+    },
+  },
+  computed: {
+    subtotal: function () {
+      return (this.amount * this.product.price).toFixed([2]);
+    },
+    ahorro: function () {
+      return (this.subtotal * (this.product.discount / 100)).toFixed([2]);
+    },
+  },
+  created() {
+    this.esFavorito = this.isFav;
+  },
+};
 </script>
 
 <style>
 .img {
   width: 50%;
-  height: 50%;
+  height: 35%;
 }
 .boton {
   display: inline-block;

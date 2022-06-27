@@ -57,20 +57,7 @@
           ></AppProducto>
         </div>
       </div>
-
-      <!-- <div class="row mt-3">
-        <h1 class="text-center mt-5">Ofertas</h1>
-        <div class="col-sm-4 mt-4" v-for="product in ofertas" :key="product.id">
-          <AppProducto
-            @agregado="onAgregado"
-            @clickCorazon="cambiarFavorito"
-            hasDiscount
-            :product="product"
-          ></AppProducto>
-        </div>
-      </div> -->
-
-      <div class="row mx-0">
+      <div id="Stock" class="row mx-0">
         <h1 class="text-center mt-5">Stock general</h1>
         <div class="col-sm-3 mt-5" v-for="product in Stock" :key="product.id">
           <AppProducto
@@ -165,19 +152,17 @@ export default {
           this.store.url + "/listedProducts/" + lp.id,
           {
             method: "DELETE",
+          })
+          this.productosFavoritos = this.productosFavoritos.filter(function (val) {
+          return val != items.producto;
           }
-          // this.productosFav = this.productosFav.filter(function (val) {
-          // return val != items.producto;
-          // }
         );
       }
       this.cargarProdsFav();
     },
     async filterLists() {
-      // this.productosFav = this.filtrarLista(this.productosFav)
-      // this.ofertas = this.filtrarLista(this.ofertas)
-      // this.stockGeneral = this.filtrarLista(this.stockGeneral)
       this.Stock = await this.filtrarLista();
+      document.getElementById("Stock").focus();
     },
     async filtrarLista() {
       let listaFiltrada = await fetch(
