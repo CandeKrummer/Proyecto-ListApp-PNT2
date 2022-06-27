@@ -154,24 +154,52 @@ export const useStore = defineStore('pruebaContador', {
         },
         moverProductosAlacena() {
             //busco los listed products de la lista de compras
-            let listedProductsLista = this._listedProductoPrueba.filter(lp => lp.IdList == this._listaDeCompras.id)
+            let listedProductsLista = this._listedProducts.filter(lp => lp.IdList == this._listaDeCompras.id)
+            console.log(listedProductsLista)
             //por cada lp en la lista, me fijo si está en la alacena y lo agrego
             for (let i = 0; i < listedProductsLista.length; i++) {
-                let lp = this._listedProductoPrueba.find(lp => lp.IdProduct === listedProductsLista[i].IdProduct && lp.IdList == this._idAlacenaVirtual)
+                let lp = this._listedProducts.find(lp => lp.IdProduct == listedProductsLista[i].IdProduct && lp.IdList == this._idAlacenaVirtual)
+                console.log(lp)
                 if (lp == undefined) {
-                    listedProductsLista[i].IdList = this._idAlacenaVirtual
-                    this._listedProductoPrueba.push(listedProductsLista[i])
+                    this._alacenaVirtual.push(this._listaDeCompras.products.find(prod => prod.id == listedProductsLista[i].IdProduct))
+                    fetch(this._url + "/listedProducts", {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json, text/plain, */*',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ IdList: this._idAlacenaVirtual, IdProduct: listedProductsLista[i].IdProduct, amount: listedProductsLista[i].amount })
+                    }).then(res => {
+                        res.json()
+                        this._listedProducts.push(res)
+                    }).then(res => console.log(res))
+                    /* listedProductsLista[i].IdList = this._idAlacenaVirtual
+                    this._listedProducts.push(listedProductsLista[i]) */
                 } else {
                     console.log("Aumento en alacena")
                     lp.amount += listedProductsLista[i].amount
+                    this._alacenaVirtual.find(prod => prod.id == lp.IdProduct).amount = lp.amount
+                    fetch(this._url + "/listedProducts/" + lp.id, {
+                        method: 'PUT',
+                        headers: {
+                            'Accept': 'application/json, text/plain, */*',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ amount: lp.amount })
+                    }).then(res => res.json())
+                        .then(res => console.log(res))
                 }
                 // y borro los listed products de la lista de compras
-                this._listedProductoPrueba = this._listedProductoPrueba.filter(function (val) {
-                    return val.IdList != this._listaDeCompras.id && val.IdProduct != listedProductsLista[i].pr;
+                this._listedProducts = this._listedProducts.filter(function (val) {
+                    console.log("borrar lp")
+                    return val.id != listedProductsLista[i].id;
                 });
             }
             //borro los productos de la lista de compras
             this._listaDeCompras.products = [];
+            //llamo a cargar la alacena devuelta
+            /* this._alacenaVirtual = [];
+            this.cargarAlacenaVirtual(); */
 
         },
         async addProduct(product, amount) {
