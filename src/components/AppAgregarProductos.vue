@@ -52,7 +52,6 @@
           <AppProducto
             @agregado="onAgregado"
             @clickCorazon="cambiarFavorito"
-            isFav
             :product="product"
           ></AppProducto>
         </div>
@@ -112,14 +111,21 @@ export default {
           list.IdFamily === this.store.idFamily &&
           list.category == "Productos favoritos"
       );
-      console.log(this.prodsFavoritos);
       this.productosFavoritos = await this.store.getProductsFromList(
         this.prodsFavoritos.id
-      );
-
-      console.log(this.prodsFavoritos);
+      )
+      for (let i = 0; i < this.Stock.length; i++) {
+        let prod = this.productosFavoritos.find(p => p.id == this.Stock[i].id)
+        if(prod != undefined){
+          prod.esFavorito = true
+          this.Stock[i].esFavorito= true
+        }else{
+          this.Stock[i].esFavorito = false
+        }
+      console.log("stock:")
+      console.log(this.Stock)
+      }
     },
-
     onAgregado(items) {
       console.log("OnAgregado: AP");
       if (items.amount > 0) {
@@ -127,9 +133,7 @@ export default {
       }
     },
     async cambiarFavorito(items) {
-      console.log("hola?");
       if (items.esFavorito) {
-        console.log("hola? 2");
         fetch(this.store.url + "/listedProducts", {
           method: "POST",
           headers: {

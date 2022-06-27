@@ -106,7 +106,7 @@
       </div>
     </div>
     <div class="row text-end">
-      <router-link to="/agregar-productos" class="col-sm-2 m-3 boton"
+      <router-link to="/agregar-productos" class="mx-5 boton"
         >Agregar productos</router-link
       >
 
@@ -125,76 +125,66 @@ export default {
   components: {
     AppLista,
   },
-  name: "AppComprasFavoritas",
-  data() {
-    return {
-      crearLista: false,
-      nombreNuevaLista: "",
-      loaded: false,
-      idListaADetallar: 0,
-      listasFavoritas: [],
-      listasFav: [
-        {
-          id: 0,
-          ShoppingListName: "Crear nueva compra",
-          products: [],
-        },
-      ],
-    };
+  name:"AppComprasFavoritas",
+  data(){
+        return{
+          crearLista: false,
+          nombreNuevaLista:'',
+          idListaADetallar: 0,
+          listasFav:[
+            {
+            id: 0,
+            ShoppingListName: "Crear nueva compra",
+            products:[],
+          }, 
+          ],
+           
+        };
   },
   setup() {
-    const store = useStore();
+     const store = useStore();
     return { store };
   },
-  created() {
+   created(){
+
     this.listaADetallar = this.listasFav[0];
     this.idListaADetallar = 0;
-    this.getFavLists();
+    this.getFavLists() 
   },
-  methods: {
-    detallarLista(listaAct) {
-      console.log(listaAct);
-      this.idListaADetallar = this.listasFav.indexOf(listaAct);
-      this.store.cambiarListaEnUso(listaAct.id);
-    },
-    crearNuevaLista() {
-      if (this.nombreNuevaLista != "") {
-        let exists = false;
-        let i = 0;
-        while (i < this.listasFav.length && !exists) {
-          if (this.listasFav[i].ShoppingListName == this.nombreNuevaLista) {
-            exists = true;
+  methods:{
+    detallarLista(listaAct){
+      console.log(listaAct)
+    this.idListaADetallar = this.listasFav.indexOf(listaAct)
+    this.store.cambiarListaEnUso(listaAct.id)
+
+   },
+    crearNuevaLista(){
+      if(this.nombreNuevaLista != ''){
+          let exists = false;
+          let i = 0;
+          while(i < this.listasFav.length && !exists){
+            if(this.listasFav[i].ShoppingListName == this.nombreNuevaLista){
+              exists = true
+            }
+            i++
           }
-          i++;
-        }
-        if (!exists && this.nombreNuevaLista != "") {
-          fetch(this.store.url + "/shoppingList", {
-            method: "POST",
-            headers: {
-              Accept: "application/json, text/plain, */*",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              ShoppingListName: this.nombreNuevaLista,
-              category: "Compra favorita",
-              IdFamily: this.store.idFamily,
-            }),
-          })
-            .then((res) => res.json())
-            .then((res) => console.log(res));
-          let lista = {
-            id: this.listasFav.length,
-            ShoppingListName: this.nombreNuevaLista,
-            products: [],
-          };
-          this.listasFav.push(lista);
-          this.nombreNuevaLista = "";
-          this.crearLista = !this.crearList;
-        } else {
-          document.getElementById("error-on-create").innerHTML = "";
-          document.getElementById("error-on-create").insertAdjacentHTML(
-            "afterbegin",
-            `
+          if(!exists && this.nombreNuevaLista != ''){
+            fetch(this.store.url+"/shoppingList", {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ShoppingListName: this.nombreNuevaLista, category: 'Compra favorita', IdFamily: this.store.idFamily})
+            }).then(res => res.json())
+              .then(res =>console.log(res))
+              let lista ={id: this.listasFav.length, ShoppingListName: this.nombreNuevaLista ,products: []}
+             this.listasFav.push(lista)
+              this.nombreNuevaLista = ''
+              this.crearLista = !this.crearList
+          }else{
+            document.getElementById('error-on-create').innerHTML = '';
+            document.getElementById('error-on-create').insertAdjacentHTML("afterbegin",`
             <div class="col alert alert-danger tet-center">
                 <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -209,14 +199,11 @@ export default {
                 />
               </svg>
               No podés tener dos listas con el mismo nombre!
-            </div>`
-          );
-        }
-      } else {
-        document.getElementById("error-on-create").innerHTML = "";
-        document.getElementById("error-on-create").insertAdjacentHTML(
-          "afterbegin",
-          `
+            </div>`)
+          }
+      }else{
+        document.getElementById('error-on-create').innerHTML = '';
+            document.getElementById('error-on-create').insertAdjacentHTML("afterbegin",`
             <div class="col alert alert-danger tet-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -231,48 +218,44 @@ export default {
                 />
               </svg>
              El nombre no puede estar vacío!
-          </div>`
-        );
+          </div>`)
       }
+      
     },
-    agregarALista() {
-      this.store.cambiarListaEnUso(this.store.listaDeCompras.id);
-      this.listaADetallar.products.forEach((producto) => {
+    agregarALista(){
+      this.store.cambiarListaEnUso(this.store.listaDeCompras.id)
+      this.listaADetallar.products.forEach(producto => {
         this.store.addProduct(producto, producto.amount);
       });
+      
     },
-    async getFavLists() {
+    async getFavLists(){
       let list;
       let productos;
-      let response = await fetch(
-        this.store.url + "shoppingList?IdFamily=" + this.store.idFamily
-      );
+      let response = await fetch(this.store.url + "shoppingList?IdFamily=" + this.store.idFamily);
       let results = await response.json();
-      results = results.filter(
-        (list) =>
-          list.IdFamily === this.store.idFamily &&
-          list.category == "Compra favorita"
-      );
-      for (let i = 0; i < results.length; i++) {
-        list = results[i];
-        productos = await this.store.getProductsFromList(list.id);
-        list.products = productos;
-
-        this.listasFav.push(list);
+      results = results.filter(list => list.IdFamily === this.store.idFamily && list.category == "Compra favorita")
+      for(let i = 0; i < results.length; i++){
+        list = results[i]
+          productos = await this.store.getProductsFromList(list.id)
+          list.products = productos
+          
+          this.listasFav.push(list)
       }
-    },
+    }
   },
-  computed: {
+  computed:{
     listaADetallar: {
-      get() {
-        return this.listasFav[this.idListaADetallar];
-      },
-      set() {
-        this.listasFav[this.idListaADetallar];
-      },
-    },
+           get(){
+             return (this.listasFav[this.idListaADetallar])
+           },
+           set(){
+            (this.listasFav[this.idListaADetallar])
+           } 
+    }
   },
-};
+
+}
 </script>
 
 <style>
