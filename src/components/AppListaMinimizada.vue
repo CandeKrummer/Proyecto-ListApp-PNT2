@@ -5,7 +5,7 @@
         <h6 class="text-center my-3">{{ lista.shoppingListName }}</h6>
 
         <div class="m-3 text-center">
-          <button class="boton text-center">
+          <div class="boton text-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -22,8 +22,8 @@
                 d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"
               />
             </svg>
-            <h6 class="text-center">Realizar compra</h6>
-          </button>
+            <h6 class="text-center p-2">${{ total }}</h6>
+          </div>
         </div>
       </div>
       <div class="borde-azul col-md-9 m-2">
@@ -56,6 +56,16 @@ export default {
     lista: Object,
   },
   name: "AppListaMinimizada",
+  computed:{
+      total(){
+        let suma = 0
+        this.lista.products.forEach(p => {
+          suma += p.price * p.amount
+         
+        })
+        return suma.toFixed(2)
+      }
+  }
 }
 </script>
 
