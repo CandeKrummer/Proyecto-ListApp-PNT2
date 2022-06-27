@@ -309,6 +309,9 @@ export const useStore = defineStore('pruebaContador', {
         },
         isAdmin() {
             return this._isAdmin
+        },
+        cantUsers() {
+            return this._users.length
         }
     },
 })
