@@ -184,6 +184,10 @@ export const useStore = defineStore('pruebaContador', {
                     .then(res => console.log(res))
             } else {
                 let cantidad = lp.amount + amount
+                if (this._idListaEnUso == this._listaDeCompras.id) {
+                    let prod = this._listaDeCompras.products.find(p => p.id == product.id)
+                    prod.amount = cantidad
+                }
                 fetch(this._url + "/listedProducts/" + lp.id, {
                     method: 'PUT',
                     headers: {
