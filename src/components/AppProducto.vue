@@ -6,12 +6,12 @@
       <div class="card-body card-shadow" style="height: 510px">
         <div @click="changeFav" class="text-end">
           <img
-            v-if="esFavorito"
+            v-if="product.esFavorito"
             class="corazon"
             src="../assets/heart-full.png"
           />
           <img
-            v-if="esFavorito == false"
+            v-if="!product.esFavorito"
             class="corazon"
             src="../assets/heart-empty.png"
           />
@@ -80,14 +80,6 @@ export default {
   name: "AppProducto",
   props: {
     product: Object,
-    hasDiscount: {
-      type: Boolean,
-      default: false,
-    },
-    isFav: {
-      type: Boolean,
-      default: false,
-    },
   },
   data() {
     return {
@@ -113,6 +105,7 @@ export default {
     },
     changeFav() {
       this.esFavorito = !this.esFavorito;
+      this.product.esFavorito != this.product.esFavorito
       this.$emit("clickCorazon", {
         producto: this.product,
         esFavorito: this.esFavorito,
@@ -128,7 +121,8 @@ export default {
     },
   },
   created() {
-    this.esFavorito = this.isFav;
+    console.log("Prod es fav: "+this.product.esFavorito)
+    this.esFavorito = this.product.esFavorito;
   },
 };
 </script>
