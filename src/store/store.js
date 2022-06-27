@@ -157,11 +157,9 @@ export const useStore = defineStore('pruebaContador', {
         moverProductosAlacena() {
             //busco los listed products de la lista de compras
             let listedProductsLista = this._listedProducts.filter(lp => lp.IdList == this._listaDeCompras.id)
-            console.log(listedProductsLista)
             //por cada lp en la lista, me fijo si está en la alacena y lo agrego
             for (let i = 0; i < listedProductsLista.length; i++) {
                 let lp = this._listedProducts.find(lp => lp.IdProduct == listedProductsLista[i].IdProduct && lp.IdList == this._idAlacenaVirtual)
-                console.log(lp)
                 if (lp == undefined) {
                     this._alacenaVirtual.push(this._listaDeCompras.products.find(prod => prod.id == listedProductsLista[i].IdProduct))
                     fetch(this._url + "/listedProducts", {
@@ -173,13 +171,11 @@ export const useStore = defineStore('pruebaContador', {
                         body: JSON.stringify({ IdList: this._idAlacenaVirtual, IdProduct: listedProductsLista[i].IdProduct, amount: listedProductsLista[i].amount })
                     }).then(res => {
                         res.json()
-                        console.log(res)
                         this.agregarListedProduct(this._idAlacenaVirtual, listedProductsLista[i].IdProduct)
-                    }).then(res => console.log(res))
+                    })
                     /* listedProductsLista[i].IdList = this._idAlacenaVirtual
                     this._listedProducts.push(listedProductsLista[i]) */
                 } else {
-                    console.log("Aumento en alacena")
                     lp.amount += listedProductsLista[i].amount
                     this._alacenaVirtual.find(prod => prod.id == lp.IdProduct).amount = lp.amount
                     fetch(this._url + "/listedProducts/" + lp.id, {
@@ -189,20 +185,16 @@ export const useStore = defineStore('pruebaContador', {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({ amount: lp.amount })
-                    }).then(res => res.json()).then(res => console.log(res))
+                    })
                 }
                 // y borro los listed products de la lista de compras
                 this._listedProducts = this._listedProducts.filter(function (val) {
-                    console.log("borrar lp")
                     return val.id != listedProductsLista[i].id;
                 });
                 this.sacarListedProduct(listedProductsLista[i])
             }
             //borro los productos de la lista de compras
             this._listaDeCompras.products = [];
-            //llamo a cargar la alacena devuelta
-            /* this._alacenaVirtual = [];
-            this.cargarAlacenaVirtual(); */
 
         },
         async addProduct(product, amount) {
@@ -230,7 +222,6 @@ export const useStore = defineStore('pruebaContador', {
                     body: JSON.stringify({ IdList: this._idListaEnUso, IdProduct: product.id, amount: amount })
                 }).then(res => {
                     res.json()
-                    console.log("push a lp")
                     this.agregarListedProduct(this._idListaEnUso, product.id)
                 })
             } else {
@@ -247,14 +238,12 @@ export const useStore = defineStore('pruebaContador', {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ IdList: this._idListaEnUso, IdProduct: product.id, amount: cantidad })
-                }).then(res => res.json()).then(res => console.log(res))
+                })
             }
         },
         async isProductOnList(idList, prodId) {
 
             let listedProduct = this._listedProducts.find(lp => lp.IdList == idList && lp.IdProduct == prodId)
-            console.log("lp en lista")
-            console.log(listedProduct)
             return listedProduct
         },
         cambiarListaEnUso(id) {
@@ -281,7 +270,7 @@ export const useStore = defineStore('pruebaContador', {
             let product
             for (let i = 0; i < listedProducts.length; i++) {
                 product = await fetch(this._url + 'products/' + listedProducts[i].IdProduct);
-                console.log("")
+                //console.log("")
                 product = await product.json();
                 product.amount = listedProducts[i].amount
                 products.push(product)
@@ -289,26 +278,17 @@ export const useStore = defineStore('pruebaContador', {
             return products
         },
         async actualizarCantListaDeCompras(producto) {
-            //PROBLEMA
-            console.log(producto)
-            console.log(this._idListaEnUso)
-            console.log(this._listaDeCompras.id)
-            // if(this._idListaEnUso == this._listaDeCompras.id){
-            let prod = this._listaDeCompras.products.find(prod => prod.id == producto.id)
-            prod.amount = producto.amount
-            console.log("cant product: " + prod.amount)
             let lp = this._listedProducts.find(lp => lp.IdList == this._idListaEnUso && lp.IdProduct == producto.id)
             lp.amount = producto.amount
-            // }else{
-            //     prod = this._listedProducts.find(prod => lp.IdList == this._idListaEnUso.id && lp.IdProduct == producto.id)
-            // }
             await this.modificarCantListedProduct(lp)
         },
         async sacarListaDeCompras(producto) {
-            this._listaDeCompras.products = this._listaDeCompras.products.filter(function (val) {
-                return val != producto;
-            })
-            let lp = this._listedProducts.find(lp => lp.IdList == this._listaDeCompras.id && lp.IdProduct == producto.id)
+            if (this._idListaEnUso == this._listaDeCompras.id) {
+                this._listaDeCompras.products = this._listaDeCompras.products.filter(function (val) {
+                    return val != producto;
+                })
+            }
+            let lp = this._listedProducts.find(lp => lp.IdList == this._idListaEnUso && lp.IdProduct == producto.id)
             this._listedProducts = this._listedProducts.filter(function (val) {
                 return val != lp;
             })
@@ -317,7 +297,6 @@ export const useStore = defineStore('pruebaContador', {
         async restarAlacena(producto) {
             let prod = this._alacenaVirtual.find(p => p.id == producto.id)
             prod.amount = producto.amount
-            console.log("cant product: " + prod.amount)
             let lp = this._listedProducts.find(lp => lp.IdList == this._idAlacenaVirtual && lp.IdProduct == producto.id)
             lp.amount = producto.amount
             await this.modificarCantListedProduct(lp)
@@ -340,10 +319,6 @@ export const useStore = defineStore('pruebaContador', {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ amount: lp.amount })
-            }).then(res => {
-                res.json()
-                console.log("lp modificado")
-                console.log(res)
             })
         },
         async sacarListedProduct(lp) {
@@ -353,10 +328,6 @@ export const useStore = defineStore('pruebaContador', {
                     'Accept': 'application/json, text/plain, */*',
                     'Content-Type': 'application/json'
                 }
-            }).then(res => {
-                res.json()
-                console.log("lp eliminado")
-                console.log(res)
             })
         },
         cerrarSesion() {

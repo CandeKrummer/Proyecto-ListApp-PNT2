@@ -108,11 +108,12 @@ export default {
       this.store.actualizarCantListaDeCompras(producto);
     },
     restarProducto(producto) {
-      producto.amount--;
-      if (producto.amount <= 0) {
+      if (producto.amount <= 1) {
         this.sacarProducto(producto);
+      } else {
+        producto.amount--;
+        this.store.actualizarCantListaDeCompras(producto);
       }
-      this.store.actualizarCantListaDeCompras(producto);
     },
     sacarProducto(producto) {
       this.listaProductos = this.remove(this.listaProductos, producto);
