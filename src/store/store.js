@@ -169,6 +169,10 @@ export const useStore = defineStore('pruebaContador', {
         async addProduct(product, amount) {
             let lp = await this.isProductOnList(this._idListaEnUso, product.id)
             if (lp == undefined) {
+                if (this._idListaEnUso == this._listaDeCompras.id) {
+                    product.amount = amount
+                    this._listaDeCompras.products.push(product)
+                }
                 fetch(this._url + "/listedProducts", {
                     method: 'POST',
                     headers: {
