@@ -78,6 +78,7 @@ export default {
   },
   methods: {
     restarProducto(producto, amount) {
+      this.store.restarAlacena(amount);
       console.log(producto + amount);
     },
     borrarProducto(producto, amount) {

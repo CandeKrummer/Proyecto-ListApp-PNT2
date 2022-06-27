@@ -10,8 +10,8 @@ export const useStore = defineStore('pruebaContador', {
             products: []
         },
         _alacenaVirtual: [],
-        _idAlacenaVirtual: 2,
-        _idFamily: 1,
+        _idAlacenaVirtual: 0,
+        _idFamily: 0,
         _url: "https://62b646096999cce2e800f9f0.mockapi.io/listapp/",
         _idListaEnUso: 0,
         _users: [{
@@ -73,8 +73,8 @@ export const useStore = defineStore('pruebaContador', {
             await this.cargarAlacenaVirtual();
         },
         async cargarStock() {
-            let response = await fetch(this._url + 'products/')
-            let results = await response.json()
+            const response = await fetch(this._url + 'products/')
+            const results = await response.json()
             this._stock = results
             console.log("carga stock")
             console.log(this._stock)
@@ -95,11 +95,20 @@ export const useStore = defineStore('pruebaContador', {
             this._listaDeCompras.shoppingListName = listaCompras.ShoppingListName;
             this._listaDeCompras.id = listaCompras.id;
             //busco los listed products de esa lista de compras
-            let listedProductsListaDeCompras = this._listedProducts.filter(lp => lp.IdList == listaCompras.id);
+            let listedProductsListaDeCompras = this._listedProducts.filter(lp => lp.IdList == this._listaDeCompras.id);
             //agrego cada producto junto con su cantidad en la lista de compras
             for (let i = 0; i < listedProductsListaDeCompras.length; i++) {
-                let product = this._stock.find(p => p.id == listedProductsListaDeCompras[i].IdProduct);
-                product.amount = listedProductsListaDeCompras[i].amount;
+                const prod = this._stock.find(p => p.id == listedProductsListaDeCompras[i].IdProduct);
+                const product = {
+                    id: prod.id,
+                    name: prod.name,
+                    brand: prod.brand,
+                    img: prod.img,
+                    price: prod.price,
+                    content: prod.content,
+                    category: prod.category,
+                    amount: listedProductsListaDeCompras[i].amount
+                }
                 /* const responseUser = await fetch(this._url + "user/" + listedProductsListaDeCompras[i].IdUser);
                 const user = await responseUser.json();
                 product.user = user.name; */
@@ -119,8 +128,17 @@ export const useStore = defineStore('pruebaContador', {
             let listedProductsAlacena = this._listedProducts.filter(lp => lp.IdList == this._idAlacenaVirtual)
             //agrego cada producto junto con su cantidad en la alacena
             for (let i = 0; i < listedProductsAlacena.length; i++) {
-                let product = this._stock.find(p => p.id == listedProductsAlacena[i].IdProduct);
-                product.amount = listedProductsAlacena[i].amount;
+                const prod = this._stock.find(p => p.id == listedProductsAlacena[i].IdProduct);
+                const product = {
+                    id: prod.id,
+                    name: prod.name,
+                    brand: prod.brand,
+                    img: prod.img,
+                    price: prod.price,
+                    content: prod.content,
+                    category: prod.category,
+                    amount: listedProductsAlacena[i].amount
+                }
                 this._alacenaVirtual.push(product)
             }
             console.log("carga alacena virtual")
@@ -215,6 +233,7 @@ export const useStore = defineStore('pruebaContador', {
         async actualizarCantListaDeCompras(producto) {
             let prod = this._listaDeCompras.products.find(prod => prod.id == producto.id)
             prod.amount = producto.amount
+            console.log("cant product: " + prod.amount)
             let lp = this._listedProducts.find(lp => lp.IdList == this._listaDeCompras.id && lp.IdProduct == producto.id)
             lp.amount = producto.amount
             await this.modificarCantListedProduct(lp)

@@ -34,6 +34,7 @@ export default {
   },
   async created() {
     this.listaDeCompras = this.store.listaDeCompras;
+    console.log(this.listaDeCompras);
     this.store.cambiarListaEnUso(this.listaDeCompras.id);
   },
 };
