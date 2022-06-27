@@ -248,11 +248,23 @@ export const useStore = defineStore('pruebaContador', {
             })
             await this.sacarListedProduct(lp)
         },
-        async restarAlacena(amount) {
-            console.log("restarAlacena" + amount)
+        async restarAlacena(producto) {
+            let prod = this._alacenaVirtual.find(p => p.id == producto.id)
+            prod.amount = producto.amount
+            console.log("cant product: " + prod.amount)
+            let lp = this._listedProducts.find(lp => lp.IdList == this._idAlacenaVirtual && lp.IdProduct == producto.id)
+            lp.amount = producto.amount
+            await this.modificarCantListedProduct(lp)
         },
         async sacarAlacena(producto) {
-            console.log("sacarAlacena" + producto)
+            this._alacenaVirtual = this._alacenaVirtual.filter(function (val) {
+                return val != producto;
+            })
+            let lp = this._listedProducts.find(lp => lp.IdList == this._idAlacenaVirtual && lp.IdProduct == producto.id)
+            this._listedProducts = this._listedProducts.filter(function (val) {
+                return val != lp;
+            })
+            await this.sacarListedProduct(lp)
         },
         async modificarCantListedProduct(lp) {
             fetch(this._url + "/listedProducts/" + lp.id, {

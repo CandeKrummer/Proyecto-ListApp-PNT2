@@ -2,9 +2,9 @@
   <div class="container">
     <div class="card text-center" style="width: 25rem">
       <div class="card-body card-shadow">
-        <h4 class="card-title">{{ product.name }} - {{ product.brand }}</h4>
+        <h4 class="card-title">{{ prod.name }} - {{ prod.brand }}</h4>
         <div class="row">
-          <h6 class="col-sm">{{ product.category }}</h6>
+          <h6 class="col-sm">{{ prod.category }}</h6>
         </div>
         <div class="row justify-content-center">
           <button
@@ -13,7 +13,7 @@
           >
             -
           </button>
-          <h5 class="col-2 mt-3 mx-1">{{ amount }}</h5>
+          <h5 class="col-2 mt-3 mx-1">{{ prod.amount }}</h5>
         </div>
       </div>
     </div>
@@ -28,25 +28,17 @@ export default {
   },
   data() {
     return {
-      amount: this.product.amount,
+      prod: this.product,
     };
   },
   methods: {
     disminuirCantidad() {
-      if (this.amount > 1) {
-        console.log("restar");
-        this.amount--;
-        this.$emit("restarDeAlacena", {
-          producto: this.product,
-          amount: this.amount,
-        });
-      } else if (this.amount <= 1) {
-        this.amount = 0;
-        console.log("borrar");
-        this.$emit("borrarDeAlacena", {
-          producto: this.product,
-          amount: this.amount,
-        });
+      if (this.prod.amount > 1) {
+        this.prod.amount--;
+        this.$emit("restarDeAlacena", this.prod);
+      } else if (this.prod.amount <= 1) {
+        this.prod.amount = 0;
+        this.$emit("borrarDeAlacena", this.prod);
       }
     },
   },
