@@ -173,7 +173,8 @@ export const useStore = defineStore('pruebaContador', {
                         body: JSON.stringify({ IdList: this._idAlacenaVirtual, IdProduct: listedProductsLista[i].IdProduct, amount: listedProductsLista[i].amount })
                     }).then(res => {
                         res.json()
-                        this._listedProducts.push(res)
+                        console.log(res)
+                        this.agregarListedProduct(this._idAlacenaVirtual, listedProductsLista[i].IdProduct)
                     }).then(res => console.log(res))
                     /* listedProductsLista[i].IdList = this._idAlacenaVirtual
                     this._listedProducts.push(listedProductsLista[i]) */
@@ -188,15 +189,14 @@ export const useStore = defineStore('pruebaContador', {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({ amount: lp.amount })
-                    }).then(res => res.json())
-                        .then(res => console.log(res))
+                    }).then(res => res.json()).then(res => console.log(res))
                 }
                 // y borro los listed products de la lista de compras
                 this._listedProducts = this._listedProducts.filter(function (val) {
                     console.log("borrar lp")
                     return val.id != listedProductsLista[i].id;
                 });
-                //Hacer el delete
+                this.sacarListedProduct(listedProductsLista[i])
             }
             //borro los productos de la lista de compras
             this._listaDeCompras.products = [];
@@ -209,8 +209,17 @@ export const useStore = defineStore('pruebaContador', {
             let lp = await this.isProductOnList(this._idListaEnUso, product.id)
             if (lp == undefined) {
                 if (this._idListaEnUso == this._listaDeCompras.id) {
-                    product.amount = amount
-                    this._listaDeCompras.products.push(product)
+                    const prod = {
+                        id: product.id,
+                        name: product.name,
+                        brand: product.brand,
+                        img: product.img,
+                        price: product.price,
+                        content: product.content,
+                        category: product.category,
+                        amount: amount
+                    }
+                    this._listaDeCompras.products.push(prod)
                 }
                 fetch(this._url + "/listedProducts", {
                     method: 'POST',
@@ -219,14 +228,18 @@ export const useStore = defineStore('pruebaContador', {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ IdList: this._idListaEnUso, IdProduct: product.id, amount: amount })
-                }).then(res => res.json())
-                    .then(res => console.log(res))
+                }).then(res => {
+                    res.json()
+                    console.log("push a lp")
+                    this.agregarListedProduct(this._idListaEnUso, product.id)
+                })
             } else {
                 let cantidad = lp.amount + amount
                 if (this._idListaEnUso == this._listaDeCompras.id) {
                     let prod = this._listaDeCompras.products.find(p => p.id == product.id)
                     prod.amount = cantidad
                 }
+                this._listedProducts.find(listedProd => listedProd.id == lp.id).amount = cantidad
                 fetch(this._url + "/listedProducts/" + lp.id, {
                     method: 'PUT',
                     headers: {
@@ -234,12 +247,11 @@ export const useStore = defineStore('pruebaContador', {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ IdList: this._idListaEnUso, IdProduct: product.id, amount: cantidad })
-                }).then(res => res.json())
-                    .then(res => console.log(res))
+                }).then(res => res.json()).then(res => console.log(res))
             }
         },
         async isProductOnList(idList, prodId) {
-            let listedProduct
+            /* let listedProduct
             let i = 0
             let products = await this.getListedProdFromList(idList)
             console.log(products)
@@ -248,7 +260,9 @@ export const useStore = defineStore('pruebaContador', {
                     listedProduct = products[i]
                 }
                 i++
-            }
+            } */
+            let listedProduct = this._listedProducts.find(lp => lp.IdList == idList && lp.IdProduct == prodId)
+            console.log("lp en lista")
             console.log(listedProduct)
             return listedProduct
         },
@@ -257,6 +271,12 @@ export const useStore = defineStore('pruebaContador', {
         },
         addListaFav(lista) {
             this._listasFavoritas.push(lista)
+        },
+        async agregarListedProduct(idList, idProduct) {
+            let lps = await fetch(this._url + "listedProducts?IdList=" + idList);
+            lps = await lps.json();
+            let lp = lps.find(prod => prod.IdList == idList && prod.IdProduct == idProduct)
+            this._listedProducts.push(lp)
         },
         async getListedProdFromList(idList) {
             let lps = await fetch(this._url + "listedProducts?IdList=" + idList);
