@@ -29,6 +29,7 @@ const routes = [
         path: '/login',
         name: 'login',
         component: AppLogin,
+        meta: { loginComp: true }
     },
     {
         path: '/config',
@@ -111,8 +112,13 @@ router.beforeEach((to, from, next) => {
         next()
     }
     if (store.isAdmin) {
-        console.log("Admin quedate en tu componente de admin")
-        next({ name: 'admin' })
+        if (to.meta.loginComp) {
+            next({ name: 'login' })
+        } else {
+            console.log("Admin quedate en tu componente de admin")
+            next({ name: 'admin' })
+        }
+
     }
 
 

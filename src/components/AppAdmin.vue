@@ -3,7 +3,7 @@
     <h1>Hola admin!</h1>
     <div class="row">
       <!-- <div class="card-deck"> -->
-      <div class="col-sm-4 mt-4 card" style="width: 18rem">
+      <div class="col-sm-4 mt-4 card-admin" style="width: 18rem">
         <div class="card-body text-center">
           <h5 class="card-title">Cantidad de usuarios registrados</h5>
           <h6 class="card-subtitle mb-2 text-muted"></h6>
@@ -12,7 +12,7 @@
           </h1>
         </div>
       </div>
-      <div class="col-sm-4 mt-4 card" style="width: 18rem">
+      <div class="col-sm-4 mt-4 card-admin" style="width: 18rem">
         <div class="card-body text-center">
           <h5 class="card-title">Cantidad de Familias</h5>
           <h6 class="card-subtitle mb-2 text-muted"></h6>
@@ -21,7 +21,7 @@
           </h1>
         </div>
       </div>
-      <div class="col-sm-4 mt-4 card" style="width: 18rem">
+      <div class="col-sm-4 mt-4 card-admin" style="width: 18rem">
         <div class="card-body text-center">
           <h5 class="card-title">Listas funcionando</h5>
           <h6 class="card-subtitle mb-2 text-muted"></h6>
@@ -33,7 +33,7 @@
           </h1>
         </div>
       </div>
-      <div class="col-sm-4 mt-4 card" style="width: 18rem">
+      <div class="col-sm-4 mt-4 card-admin" style="width: 18rem">
         <div class="card-body text-center">
           <h5 class="card-title">Productos a la venta</h5>
           <h6 class="card-subtitle mb-2 text-muted"></h6>
@@ -101,7 +101,7 @@ export default {
 </script>
 
 <style>
-.card {
+.card-admin {
   width: 18rem;
   height: 10rem;
   margin: 20px;
