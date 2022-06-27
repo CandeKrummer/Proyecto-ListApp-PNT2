@@ -251,16 +251,7 @@ export const useStore = defineStore('pruebaContador', {
             }
         },
         async isProductOnList(idList, prodId) {
-            /* let listedProduct
-            let i = 0
-            let products = await this.getListedProdFromList(idList)
-            console.log(products)
-            while (i < products.length && listedProduct == undefined) {
-                if (products[i].IdProduct == prodId) {
-                    listedProduct = products[i]
-                }
-                i++
-            } */
+
             let listedProduct = this._listedProducts.find(lp => lp.IdList == idList && lp.IdProduct == prodId)
             console.log("lp en lista")
             console.log(listedProduct)
@@ -298,11 +289,19 @@ export const useStore = defineStore('pruebaContador', {
             return products
         },
         async actualizarCantListaDeCompras(producto) {
+            //PROBLEMA
+            console.log(producto)
+            console.log(this._idListaEnUso)
+            console.log(this._listaDeCompras.id)
+            // if(this._idListaEnUso == this._listaDeCompras.id){
             let prod = this._listaDeCompras.products.find(prod => prod.id == producto.id)
             prod.amount = producto.amount
             console.log("cant product: " + prod.amount)
-            let lp = this._listedProducts.find(lp => lp.IdList == this._listaDeCompras.id && lp.IdProduct == producto.id)
+            let lp = this._listedProducts.find(lp => lp.IdList == this._idListaEnUso && lp.IdProduct == producto.id)
             lp.amount = producto.amount
+            // }else{
+            //     prod = this._listedProducts.find(prod => lp.IdList == this._idListaEnUso.id && lp.IdProduct == producto.id)
+            // }
             await this.modificarCantListedProduct(lp)
         },
         async sacarListaDeCompras(producto) {

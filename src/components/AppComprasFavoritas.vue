@@ -106,11 +106,10 @@
       </div>
     </div>
     <div class="row text-end">
-      <div class="col mt-3" @click="cambiarListaEnUso">
-        <router-link to="/agregar-productos" class="mx-5 boton"
-          >Agregar productos</router-link
-        >
-      </div>
+      <router-link to="/agregar-productos" class="mx-5 boton"
+        >Agregar productos</router-link
+      >
+
       <button type="button" class="col-sm-2 boton m-3" @click="agregarALista()">
         Agregar a lista actual
       </button>
@@ -156,6 +155,7 @@ export default {
   },
   methods:{
     detallarLista(listaAct){
+      console.log(listaAct)
     this.idListaADetallar = this.listasFav.indexOf(listaAct)
     this.store.cambiarListaEnUso(listaAct.id)
 
@@ -179,9 +179,9 @@ export default {
               },
               body: JSON.stringify({ShoppingListName: this.nombreNuevaLista, category: 'Compra favorita', IdFamily: this.store.idFamily})
             }).then(res => res.json())
-              .then(res => this.listasFav.push(res))
-              // let lista ={id: this.listasFavoritas.length, ShoppingListName: this.nombreNuevaLista ,products: []}
-             
+              .then(res =>console.log(res))
+              let lista ={id: this.listasFav.length, ShoppingListName: this.nombreNuevaLista ,products: []}
+             this.listasFav.push(lista)
               this.nombreNuevaLista = ''
               this.crearLista = !this.crearList
           }else{
@@ -223,9 +223,6 @@ export default {
           </div>`)
       }
       
-    },
-    cambiarListaEnUso(){
-      console.log("BORRAR: "+this.listaADetallar.id)
     },
     agregarALista(){
       this.store.cambiarListaEnUso(this.store.listaDeCompras.id)

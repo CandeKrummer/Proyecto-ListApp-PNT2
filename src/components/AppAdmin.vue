@@ -1,37 +1,39 @@
 <template>
   <div class="container">
-    <h1>Hola Admin!</h1>
+    <!-- <h1>Hola Admin!</h1> -->
     <div class="row">
-      <div class="col-sm-4 mt-4" v-for="valor in valores" :key="valor.titulo">
-        <AppCardAdmin :titulo="valor.titulo" :valor="valor.valor" />
-      </div>
-    </div>
-    <div class="d-flex">
-      <div class="col-md m-5 card-admin card">
-        <div class="card-body text-center">
-          <h4 class="card-title">Listas funcionando</h4>
-          <h6 class="card-subtitle mb-2 text-muted"></h6>
-          <h1>
-            {{ lists }}
-          </h1>
-          <div class="row">
-            <div class="col">
-              Listas favoritas:
-              <div class="6">{{ listasFavs }}</div>
-            </div>
-            <div class="col">
-              Listas de compras:
-              <div class="6">{{ families }}</div>
-            </div>
-            <div class="col">
-              Alacenas:
-              <div class="6">{{ families }}</div>
-            </div>
-            <div class="col">
-              Listas productos favoritos:
-              <div class="6">{{ families }}</div>
+      <div class="d-flex">
+        <div class="col-md mr-5 card-admin">
+          <div class="card-body borde text-center px-0">
+            <h4 class="card-title">Listas funcionando</h4>
+            <h6 class="mb-2"></h6>
+            <h1>
+              {{ lists }}
+            </h1>
+            <div class="row p-0">
+              <div class="col-sm mx-3 borde-azul">
+                Listas favoritas:
+                <div class="6">{{ listasFavs }}</div>
+              </div>
+              <div class="col mx-3 borde-azul">
+                Listas de compras:
+                <div class="6">{{ families }}</div>
+              </div>
+              <div class="col mx-3 borde-azul">
+                Alacenas:
+                <div class="6">{{ families }}</div>
+              </div>
+              <div class="col mx-3 borde-azul">
+                Listas productos favoritos:
+                <div class="6">{{ families }}</div>
+              </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div class="row mx-5 mt-4">
+        <div class="col" v-for="valor in valores" :key="valor.titulo">
+          <AppCardAdmin :titulo="valor.titulo" :valor="valor.valor" />
         </div>
       </div>
     </div>
@@ -66,7 +68,7 @@ export default {
     cantUsers(){
       return this.store.cantUsers
     },
-     promedioXFamilia(){
+     gastoTotal(){
       let total = 0
       let prod
       let lps = this.lps
@@ -75,7 +77,7 @@ export default {
         total += prod.price * lp.amount
       });
       
-     return total / this.families
+     return total
     }
     
   },
@@ -115,10 +117,14 @@ export default {
         valor: results.length+' Prods'
       })
     },
-    cargarPromedio(){
+    cargarGastos(){
       this.valores.push({
-        titulo: "Gastos promedio por familia",
-        valor: '$'+this.promedioXFamilia.toFixed([2])
+        titulo: "Gasto promedio por familia",
+        valor: '$'+(this.gastoTotal * this.families).toFixed([2])
+      })
+      this.valores.push({
+        titulo: "Gasto total entre las familia",
+        valor: '$'+this.gastoTotal.toFixed([2])
       })
     },
     cargarUsers(){
@@ -133,7 +139,7 @@ export default {
     await this.calcularListas()
     await this.calcularProductos()
     await this.getLPs()
-    this.cargarPromedio()
+    this.cargarGastos()
     this.cargarUsers()
 
   }

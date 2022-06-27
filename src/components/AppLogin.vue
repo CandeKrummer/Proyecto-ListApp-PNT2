@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="mx-auto" style="width: 500px">
     <div class="m-5 borde" style="width: 400px" v-if="!logged">
       <form class="m-3">
         <div v-if="incorrecto" class="col alert alert-danger text-center m-0">
@@ -54,9 +54,8 @@
       </form>
     </div>
     <div v-if="logged">
-      <h1>Hola {{ name }}!</h1>
-
       <div class="text-center">
+        <h1 class="my-5">Hola {{ name }}!</h1>
         <button v-on:click="cerrarSesion" type="submit" class="boton my-3 w-50">
           Cerrar Sesión
         </button>
