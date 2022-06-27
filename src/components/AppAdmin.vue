@@ -101,7 +101,7 @@ export default {
       this.products = results
       this.valores.push({
         titulo: "Productos en Stock general",
-        valor: results.length + ' Prods.'
+        valor: results.length + ' Prods'
       })
       
       
@@ -118,7 +118,7 @@ export default {
     cargarPromedio(){
       this.valores.push({
         titulo: "Gastos promedio por familia",
-        valor: '$'+this.promedioXFamilia
+        valor: '$'+this.promedioXFamilia.toFixed([2])
       })
     },
     cargarUsers(){

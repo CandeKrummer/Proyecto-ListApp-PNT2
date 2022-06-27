@@ -1,5 +1,5 @@
 <template>
-  <div class="card-admin card" style="width: 18rem">
+  <div class="card-admin borde" style="width: 18rem">
     <div class="card-body text-center">
       <h5 class="card-title">{{ titulo }}</h5>
       <h6 class="card-subtitle mb-2 text-muted"></h6>

@@ -17,7 +17,9 @@
           />
         </div>
         <img :src="product.img" class="img" />
-        <h4 class="card-title">{{ product.name }} - {{ product.brand }}</h4>
+        <h4 class="card-title">
+          {{ product.name }} - {{ product.brand }} {{ product.content }}
+        </h4>
         <div class="row">
           <h5 class="">Precio: ${{ product.price }}</h5>
           <h6 v-if="product.discount != undefined">
