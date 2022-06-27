@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="m-5 borde" style="width: 400px">
+    <div class="m-5 borde" style="width: 400px" v-if="!logged">
       <form class="m-3">
         <div v-if="incorrecto" class="col alert alert-danger text-center m-0">
           <svg
@@ -53,6 +53,15 @@
         </div>
       </form>
     </div>
+    <div v-if="logged">
+      <h1>Hola {{ name }}!</h1>
+
+      <div class="text-center">
+        <button v-on:click="cerrarSesion" type="submit" class="boton my-3 w-50">
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -65,7 +74,6 @@ export default {
     return {
       mail: null,
       password: null,
-      logeado: false,
       incorrecto: false,
     };
   },
@@ -76,8 +84,7 @@ export default {
   methods: {
     validarLogin() {
       if (this.store.validarUsuario(this.mail, this.password)) {
-        this.logeado = true;
-        console.log("Es admin: " + this.store.isAdmin);
+        this.logged = true;
         if (!this.store.isAdmin) {
           this.store.reset();
           this.store.inicio();
@@ -85,9 +92,27 @@ export default {
         this.$router.push({ path: "/" });
       } else {
         this.incorrecto = true;
-      }
+    }
     },
-  },
+    cerrarSesion(){
+      this.store.cerrarSesion()
+    }
+  
+},
+  computed:{
+    logged:{
+        get(){
+             return this.store.estaAutenticado
+        },
+        set(){
+
+        }
+    },
+    name(){
+        return this.store.userName
+  }
+    
+  }
 };
 </script>
 

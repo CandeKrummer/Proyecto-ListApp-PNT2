@@ -15,6 +15,7 @@ export const useStore = defineStore('pruebaContador', {
         _url: "https://62b646096999cce2e800f9f0.mockapi.io/listapp/",
         _idListaEnUso: 0,
         _users: [{
+            name: 'Admin',
             mail: 'admin@a.com',
             password: 'admin',
             familyId: 0,
@@ -45,7 +46,8 @@ export const useStore = defineStore('pruebaContador', {
         },
         ],
         _userValid: false,
-        _isAdmin: false
+        _isAdmin: false,
+        _userName: '',
 
     }),
     actions: {
@@ -54,7 +56,7 @@ export const useStore = defineStore('pruebaContador', {
             while (!this._userValid && i < this._users.length) {
                 if (mail == this._users[i].mail && password == this._users[i].password) {
                     this._userValid = true;
-
+                    this._userName = this._users[i].name
                     this._idFamily = this._users[i].familyId
                     if (this._idFamily == 0) {
                         console.log("hola admin")
@@ -336,7 +338,20 @@ export const useStore = defineStore('pruebaContador', {
                 console.log("lp eliminado")
                 console.log(res)
             })
-        }
+        },
+        cerrarSesion() {
+            this._isAdmin = false
+            this._userValid = false
+            this._userName = ''
+            this._listaDeCompras = {
+                id: 0,
+                shoppingListName: "",
+                products: []
+            },
+                this._alacenaVirtual = []
+            this._stock = []
+            this._listedProducts = []
+        },
     },
     getters: {
         listaDeCompras() {
@@ -365,6 +380,12 @@ export const useStore = defineStore('pruebaContador', {
         },
         isAdmin() {
             return this._isAdmin
+        },
+        cantUsers() {
+            return this._users.length
+        },
+        userName() {
+            return this._userName
         }
     },
 })

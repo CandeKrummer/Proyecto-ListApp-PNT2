@@ -228,7 +228,7 @@ export default {
       console.log("BORRAR: "+this.listaADetallar.id)
     },
     agregarALista(){
-      this.store.cambiarListaEnUso(this.store.listaDeCompras)
+      this.store.cambiarListaEnUso(this.store.listaDeCompras.id)
       this.listaADetallar.products.forEach(producto => {
         this.store.addProduct(producto, producto.amount);
       });
